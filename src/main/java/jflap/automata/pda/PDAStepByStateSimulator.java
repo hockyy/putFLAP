@@ -45,17 +45,20 @@ public class PDAStepByStateSimulator extends AutomatonSimulator {
 		super(automaton);
 		/** default acceptance is by final state. */
 		
-		Object[] possibleValues = {"Final State", "Empty Stack"};
+		Object[] possibleValues = {"Final State", "Empty Stack", "Both Final and Empty"};
 		Object selectedValue = JOptionPane.showInputDialog(null,
 		            "Accept by", "Input",
 		            JOptionPane.INFORMATION_MESSAGE, null,
-		            possibleValues, possibleValues[0]);
+		            possibleValues, possibleValues[2]);
 		if(selectedValue.equals(possibleValues[0])){
 			myAcceptance = FINAL_STATE;
 			//EDebug.print("fstate");
 		}else if(selectedValue.equals(possibleValues[1])){
 			myAcceptance = EMPTY_STACK;
 			//EDebug.print("estack");
+		}else if(selectedValue.equals(possibleValues[2])){
+			myAcceptance = FINAL_AND_EMPTY;
+			//EDebug.print("both");
 		}
 		//myAcceptance = FINAL_STATE;
 		//myAcceptance=selectedValue;
@@ -73,7 +76,6 @@ public class PDAStepByStateSimulator extends AutomatonSimulator {
 		/** The stack should contain the bottom of stack marker. */
 		Configuration[] configs = new Configuration[1];
 		CharacterStack stack = new CharacterStack();
-		stack.push("Z");
 		configs[0] = new PDAConfiguration(myAutomaton.getInitialState(), null,
 				input, input, stack, myAcceptance);
 		return configs;
@@ -215,5 +217,8 @@ public class PDAStepByStateSimulator extends AutomatonSimulator {
 
 	/** The variable to represent accept by final state. */
 	protected static final int FINAL_STATE = 1;
+
+	/** The variable to represent accept by both final state and empty stack */
+	protected static final int FINAL_AND_EMPTY = 2;
 
 }

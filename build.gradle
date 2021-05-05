@@ -7,9 +7,9 @@ plugins {
     id 'edu.sc.seis.launch4j' version '2.4.4'
 }
 
-mainClassName = 'pl.poznan.put.cie.putflap.MainKt'
+mainClassName = 'jflap.gui.Main'
 
-group 'pl.poznan.put.cie'
+group 'flap'
 version '1.0'
 
 sourceCompatibility = 1.8
@@ -71,7 +71,7 @@ shadowJar {
 launch4j {
     outfile = 'putflap.exe'
     outputDir = 'exe'
-    mainClassName = 'pl.poznan.put.cie.putflap.MainKt'
+    mainClassName = 'jflap.gui.Main'
     copyConfigurable = project.tasks.shadowJar.outputs.files
     jar = "lib/${project.tasks.shadowJar.archiveName}"
     headerType = "console"

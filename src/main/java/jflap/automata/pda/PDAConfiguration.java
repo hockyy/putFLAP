@@ -43,6 +43,9 @@ public class PDAConfiguration extends Configuration {
 
 	/** The variable to represent accept by final state. */
 	protected static final int FINAL_STATE = 1;
+
+	/** The variable to represent accept by both final state and empty stack */
+	protected static final int FINAL_AND_EMPTY = 2;
 	
 	/**
 	 * Instantiates a new PDAConfiguration.
@@ -138,6 +141,14 @@ public class PDAConfiguration extends Configuration {
 			if (this.getUnprocessedInput() == ""
 					&& stack.height() == 0) {
 				return true;
+			}
+		}else if(myAcceptance == FINAL_AND_EMPTY){
+			CharacterStack stack = this.getStack();
+			if (this.getUnprocessedInput() == ""
+				&& stack.height() == 0) {
+				State s = getCurrentState();
+				Automaton a = s.getAutomaton();
+				return a.isFinalState(s);
 			}
 		}
 		return false;

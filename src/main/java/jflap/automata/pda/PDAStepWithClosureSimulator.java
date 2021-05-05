@@ -45,7 +45,6 @@ public class PDAStepWithClosureSimulator extends PDAStepByStateSimulator {
 		Configuration[] configs = new Configuration[closure.length];
 		for (int k = 0; k < closure.length; k++) {
 			CharacterStack stack = new CharacterStack();
-			stack.push("Z");
 			configs[k] = new PDAConfiguration(closure[k], null, input, input,
 					stack, myAcceptance);
 		}

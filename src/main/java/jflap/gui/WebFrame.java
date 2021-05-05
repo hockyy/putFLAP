@@ -194,8 +194,6 @@ public class WebFrame extends JFrame {
 		} catch (IOException e) {
 			// Display an alert to that effect.
 			System.err.println(e);
-			JOptionPane.showMessageDialog(this, "Could not access URL " + url
-					+ "!", "Web Error", JOptionPane.ERROR_MESSAGE);
 			myURLHistory.remove(myCurrentPosition);
 			myCurrentPosition--;
 		}
@@ -214,8 +212,6 @@ public class WebFrame extends JFrame {
 		} catch (IOException e) {
 			// Display an alert to that effect.
 			System.err.println(e);
-			JOptionPane.showMessageDialog(this, "Could not access URL " + url
-					+ "!", "Web Error", JOptionPane.ERROR_MESSAGE);
 			myURLHistory.remove(myCurrentPosition);
 			myCurrentPosition--;
 		}

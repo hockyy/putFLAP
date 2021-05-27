@@ -108,7 +108,7 @@ public class TMSimulator extends AutomatonSimulator {
      * @param inputs the read strings
      */
     public Configuration[] getInitialConfigurations(String[] inputs) {
-        System.out.println("Get Initial Configuration of multitape");
+//        System.out.println("Get Initial Configuration of multitape");
         inputStrings = (String[]) inputs.clone();
         Tape[] tapes = new Tape[inputs.length];
         for (int i = 0; i < tapes.length; i++) {
@@ -134,7 +134,7 @@ public class TMSimulator extends AutomatonSimulator {
         //for MULTITAPE turing Machine
         if (tapes.length > 1) {
             for (int i = 0; i < tapes.length; i++) {
-                System.out.printf("Matches %d%n", i);
+//                System.out.printf("Matches %d%n", i);
                 char underHead = tapes[i].readChar();
                 char toMatch = tmt.getRead(i).charAt(0);
 
@@ -229,8 +229,8 @@ public class TMSimulator extends AutomatonSimulator {
 
         //MERLIN MERLIN MERLIN MERLIN MERLIN//
 
-        System.out.println("Step configuration");
-        System.out.println(config);
+//        System.out.println("Step configuration");
+//        System.out.println(config);
 
         ArrayList<Configuration> list = new ArrayList<>();
         TMConfiguration configuration = (TMConfiguration) config;
@@ -284,7 +284,7 @@ public class TMSimulator extends AutomatonSimulator {
             for (int i = 0; i < trans.length; i++) {
                 tmt = (TMTransition) trans[i];
                 if (matches(configuration.getTapes(), tmt)) {
-                    System.out.println(tmt);
+//                    System.out.println(tmt);
                     success = true;
                     break outer;
                 }
@@ -308,31 +308,31 @@ public class TMSimulator extends AutomatonSimulator {
 
         if (success) { //if variables are used then they will be common to all tapes...
 
-            System.out.println("Sucess!");
+//            System.out.println("Sucess!");
             if (configuration.getTapes().length > 1) {
-                System.out.println("Here!");
+//                System.out.println("Here!");
                 for (int k = 0; k < configuration.getTapes().length; k++) {
-                    System.out.println(k);
+//                    System.out.println(k);
                     configuration.getTapes()[k].writeChar(tmt.getWrite(k).charAt(0) == '~' ?
                         configuration.getTapes()[k].readChar() :
                         tmt.getWrite(k).charAt(0));
                     configuration.getTapes()[k].moveHead(tmt.getDirection(k));
-                    list.add(new TMConfiguration(tmt.getToState(), null, configuration.getTapes(),
-                        myFilters));
-                    System.out.printf("Ukuran list%d %n", list.size());
-                    if(list.size() > 0){
-                        TMConfiguration belakang = (TMConfiguration) list.get(list.size()-1);
-                        System.out.println(belakang);
-                    }
+//                    System.out.printf("Ukuran list%d %n", list.size());
+//                    if(list.size() > 0){
+//                        TMConfiguration belakang = (TMConfiguration) list.get(list.size()-1);
+//                        System.out.println(belakang);
+//                    }
                 }
 
-                if(list.size() > 0){
-                    TMConfiguration belakang = (TMConfiguration) list.get(list.size()-1);
-                    list.clear();
-                    list.add(belakang);
-                    System.out.println("GO TO HERE");
-                    System.out.println(belakang);
-                }
+                list.add(new TMConfiguration(tmt.getToState(), null, configuration.getTapes(),
+                    myFilters));
+//                if(list.size() > 0){
+//                    TMConfiguration belakang = (TMConfiguration) list.get(list.size()-1);
+//                    list.clear();
+//                    list.add(belakang);
+//                    System.out.println("GO TO HERE");
+//                    System.out.println(belakang);
+//                }
 
             } else { //only do variable assignments for the one-tape Turing machine...
 

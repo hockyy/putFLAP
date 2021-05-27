@@ -114,7 +114,7 @@ public class EnvironmentFrame extends JFrame {
 	 */
 	public String getDescription() {
 		if (environment.getFile() == null)
-			return "<untitled" + myNumber + ">";
+			return "<untitled" + myNumber + ">" + " Modded by Hocky Yudhiono \uD83D\uDC3E";
         else if(environment.myObjects!=null  && environment.getActive()!=null && (environment.getActive() instanceof EditorPane || environment.getActive() instanceof GrammarInputPane)){
             return environment.getActive().getName();        
         }

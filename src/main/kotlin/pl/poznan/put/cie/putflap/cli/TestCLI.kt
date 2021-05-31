@@ -8,9 +8,10 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.choice
 
-internal object TestCLI : CliktCommand(name = "test", help = "check of specific characteristics of given automatons and grammars") {
-    
-    private val type by option("-t", "--type",  help = "type of test to perform")
+internal object TestCLI :
+    CliktCommand(name = "test", help = "check of specific characteristics of given automatons and grammars") {
+
+    private val type by option("-t", "--type", help = "type of test to perform")
         .choice(*Array(Types.TestType.values().size) { Types.TestType.values()[it].name.toLowerCase() })
         .convert { Types.TestType.valueOf(it.toUpperCase()) }
         .required()

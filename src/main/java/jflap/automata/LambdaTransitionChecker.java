@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,39 +15,38 @@
  */
 
 
-
-
-
 package jflap.automata;
 
 /**
  * The lambda transition checker can be used to determine if a given transition
  * is a lambda transition.
- * 
+ *
  * @author Ryan Cavalcante
  */
 
 public abstract class LambdaTransitionChecker {
-	/**
-	 * Creates a <CODE>LambdaTransitionChecker</CODE>.
-	 */
-	public LambdaTransitionChecker() {
+    /**
+     * The lambda string.
+     */
+    protected String LAMBDA = "";
+    /**
+     * The stay string.
+     */
+    protected String STAY = "S";
 
-	}
+    /**
+     * Creates a <CODE>LambdaTransitionChecker</CODE>.
+     */
+    public LambdaTransitionChecker() {
 
-	/**
-	 * Returns true if <CODE>transition</CODE> is a lambda transition.
-	 * 
-	 * @param transition
-	 *            the transition.
-	 * @return true if <CODE>transition</CODE> is a lambda transition.
-	 */
-	public abstract boolean isLambdaTransition(Transition transition);
+    }
 
-	/** The lambda string. */
-	protected String LAMBDA = "";
-
-	/** The stay string. */
-	protected String STAY = "S";
+    /**
+     * Returns true if <CODE>transition</CODE> is a lambda transition.
+     *
+     * @param transition the transition.
+     * @return true if <CODE>transition</CODE> is a lambda transition.
+     */
+    public abstract boolean isLambdaTransition(Transition transition);
 
 }

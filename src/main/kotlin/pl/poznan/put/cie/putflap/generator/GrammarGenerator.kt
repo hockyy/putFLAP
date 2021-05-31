@@ -13,7 +13,7 @@ import java.util.*
  * @param alphabet alphabet to use (generated structure may but does not have to use all symbols)
  * @param finals number of final states
  */
-class GrammarGenerator (
+class GrammarGenerator(
     private val n: Int,
     private val finals: Int,
     private val alphabet: Array<String>
@@ -37,7 +37,7 @@ class GrammarGenerator (
         val productions = mutableSetOf<Production>()
 
         // set end states
-        for (i in (n-finals until n)) productions.add(Production("${nonterminals[i]}", ""))
+        for (i in (n - finals until n)) productions.add(Production("${nonterminals[i]}", ""))
 
         // add path
         val unusedNonterminals = LinkedList<Char>()
@@ -58,7 +58,8 @@ class GrammarGenerator (
             Production(
                 "${nonterminals.random()}",
                 "${getRandomTerminalProduction()}${nonterminals.random()}"
-            ))
+            )
+        )
 
         // add productions to the grammar
         val grammar = RegularGrammar()

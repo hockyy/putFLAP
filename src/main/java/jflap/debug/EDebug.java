@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,28 +15,33 @@
  */
 
 
-
-
 package jflap.debug;
 
 public class EDebug {
-	
-	public static boolean setFind = false;
-	private static String getFileName(){
-		return Thread.currentThread().getStackTrace()[3].getClassName();
-	}
-	private static String getClassName(){
-		return Thread.currentThread().getStackTrace()[3].getClassName();
-	}
-	private static String getMethodName(){
-		return Thread.currentThread().getStackTrace()[3].getMethodName();
-	}
-	private static int getLineNumber(){
-		return Thread.currentThread().getStackTrace()[3].getLineNumber();
-	}
-    public static void print (Object s){
-        if (setFind)
-            System.out.println(getFileName() +":" +getClassName() +":"+  getMethodName() +":"+ getLineNumber());	
+
+    public static boolean setFind = false;
+
+    private static String getFileName() {
+        return Thread.currentThread().getStackTrace()[3].getClassName();
+    }
+
+    private static String getClassName() {
+        return Thread.currentThread().getStackTrace()[3].getClassName();
+    }
+
+    private static String getMethodName() {
+        return Thread.currentThread().getStackTrace()[3].getMethodName();
+    }
+
+    private static int getLineNumber() {
+        return Thread.currentThread().getStackTrace()[3].getLineNumber();
+    }
+
+    public static void print(Object s) {
+        if (setFind) {
+            System.out.println(getFileName() + ":" + getClassName() + ":" + getMethodName() + ":" +
+                getLineNumber());
+        }
         System.out.println(s);
     }
 }

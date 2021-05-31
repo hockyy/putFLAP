@@ -40,7 +40,7 @@ object AutomatonRunner {
             val configuration = possibleConfigurations.removeAt(0)
             steps.add(StepReport.generate(configuration))
 
-            if(configuration.isAccept) {
+            if (configuration.isAccept) {
                 accepted = true
                 break
             }

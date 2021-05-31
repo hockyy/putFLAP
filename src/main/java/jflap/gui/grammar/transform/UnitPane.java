@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,11 +15,20 @@
  */
 
 
-
-
-
 package jflap.gui.grammar.transform;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedList;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import jflap.automata.State;
 import jflap.grammar.Grammar;
 import jflap.grammar.Production;
@@ -34,433 +43,440 @@ import jflap.gui.viewer.AutomatonDrawer;
 import jflap.gui.viewer.AutomatonPane;
 import jflap.gui.viewer.SelectionDrawer;
 
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.LinkedList;
-
 /**
  * This is the pane where the removal of unit productions takes place.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class UnitPane extends JPanel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The grammar environment.
+     */
+    GrammarEnvironment environment;
+    /**
+     * The grammar to remove unit productions on.
+     */
+    Grammar grammar;
+    /**
+     * The controller object.
+     */
+    UnitController controller;
+    /**
+     * The grammar table.
+     */
+    GrammarTable grammarTable;
+    /**
+     * The main instruction label.
+     */
+    JLabel mainLabel = new JLabel(" ");
+    /**
+     * The detail instruction label.
+     */
+    JLabel detailLabel = new JLabel(" ");
+    /**
+     * The editor pane.
+     */
+    EditorPane vdgEditor;
+    /**
+     * The vdg drawer.
+     */
+    SelectionDrawer vdgDrawer;
+    /**
+     * Simple kludge to allow us to add stuff to the table without fear.
+     */
+    boolean editingActive = false;
+    /**
+     * The editing grammar table view.
+     */
+    GrammarTable editingGrammarView = new GrammarTable(editingGrammarModel);
 
-	/**
-	 * Instantiates a new unit removing pane.
-	 * 
-	 * @param environment
-	 *            the grammar environment this pane will belong to
-	 * @param grammar
-	 *            the grammar to do the unit removal on
-	 */
-	public UnitPane(GrammarEnvironment environment, Grammar grammar) {
-		this.environment = environment;
-		this.grammar = grammar;
-		controller = new UnitController(this, grammar);
-		initView();
-	}
+    // These are some of the data structures relevant.
+    AbstractAction proceedAction = new AbstractAction("Proceed") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-	/**
-	 * Initializes the GUI components of this pane.
-	 */
-	private void initView() {
-		super.setLayout(new BorderLayout());
-		initGrammarTable();
-		JPanel rightPanel = initRightPanel();
-		JSplitPane mainSplit = SplitPaneFactory.createSplit(environment, true,
-				0.4, new JScrollPane(grammarTable), rightPanel);
-		this.add(mainSplit, BorderLayout.CENTER);
-	}
+        public void actionPerformed(ActionEvent e) {
+            GrammarTransformAction
+                .hypothesizeUseless(environment, getGrammar());
+        }
+    };
+    AbstractAction exportAction = new AbstractAction("Export") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-	/**
-	 * Initializes the right panel.
-	 */
-	private JPanel initRightPanel() {
-		JPanel right = new JPanel(new BorderLayout());
+        public void actionPerformed(ActionEvent e) {
+            FrameFactory.createFrame(getGrammar());
+        }
+    };
+    /**
+     * The editing row in the table.
+     */
+    private int editingRow = -1;
 
-		// Sets the alignments.
-		mainLabel.setAlignmentX(0.0f);
-		detailLabel.setAlignmentX(0.0f);
+    // These are some of the graphical elements.
+    /**
+     * The complete selected action.
+     */
+    AbstractAction completeSelectedAction = new AbstractAction(
+        "Complete Selected") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(mainLabel);
-		panel.add(detailLabel);
-		initEditingGrammarTable();
+        public void actionPerformed(ActionEvent e) {
+            cancelEditing();
+            controller.doSelected();
+        }
+    };
+    /**
+     * The delete action for deleting rows.
+     */
+    AbstractAction deleteAction = new AbstractAction("Delete") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		// Sets up the editor pane.
+        public void actionPerformed(ActionEvent e) {
+            deleteActivated();
+        }
+    };
+    /**
+     * Which columsn of the editing row have been edited yet?
+     */
+    private final boolean[] editingColumn = new boolean[2];
+    /**
+     * The editing grammar table mode.
+     */
+    GrammarTableModel editingGrammarModel = new GrammarTableModel() {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		vdgDrawer = new SelectionDrawer(controller.vdg);
-		vdgEditor = new EditorPane(vdgDrawer, new ToolBox() {
-			public java.util.List<Tool> tools(AutomatonPane view,
-					AutomatonDrawer drawer) {
-				java.util.List<Tool> t = new LinkedList<>();
-				t.add(new ArrowNontransitionTool(view, drawer) {
-					public void mouseClicked(MouseEvent e) {
-						super.mouseClicked(e);
-						State s = vdgDrawer.stateAtPoint(e.getPoint());
-						if (controller.step == UnitController.PRODUCTION_MODIFY) {
-							controller.stateClicked(s, e);
-						}
-					}
-				});
-				t.add(new TransitionTool(view, drawer));
-				return t;
-			}
-		}, true);
-		// Grammar editor?
-		JPanel grammarEditor = new JPanel(new BorderLayout());
-		JToolBar editingBar = new JToolBar();
-		editingBar.setAlignmentX(0.0f);
-		editingBar.setFloatable(false);
-		editingBar.add(deleteAction);
-		editingBar.add(completeSelectedAction);
-		grammarEditor.add(editingBar, BorderLayout.NORTH);
-		grammarEditor.add(new JScrollPane(editingGrammarView),
-				BorderLayout.CENTER);
-		JSplitPane rightSplit = SplitPaneFactory.createSplit(environment,
-				false, 0.5, vdgEditor, grammarEditor);
-		panel.add(rightSplit);
+        public boolean isCellEditable(int r, int c) {
+            if (!editingActive) {
+                return false;
+            }
+            if (controller.step != UnitController.PRODUCTION_MODIFY) {
+                return false;
+            }
+            if (c == 1) {
+                return false;
+            }
+            if (editingRow == -1) {
+                if (r == getRowCount() - 1) {
+                    editingRow = r;
+                    editingColumn[0] = editingColumn[1] = false;
+                    return true;
+                }
+                return false;
+            } else {
+                return editingRow == r;
+            }
+        }
+    };
+    AbstractAction doAllAction = new AbstractAction("Do All") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		JToolBar toolbar = new JToolBar();
-		toolbar.setAlignmentX(0.0f);
-		toolbar.add(doStepAction);
-		toolbar.add(doAllAction);
-		toolbar.addSeparator();
-		toolbar.add(proceedAction);
-		toolbar.add(exportAction);
-		right.add(toolbar, BorderLayout.NORTH);
+        public void actionPerformed(ActionEvent e) {
+            controller.doAll();
+        }
+    };
+    // These are general controls.
+    AbstractAction doStepAction = new AbstractAction("Do Step") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		right.add(panel, BorderLayout.CENTER);
+        public void actionPerformed(ActionEvent e) {
+            controller.doStep();
+        }
+    };
 
-		return right;
-	}
+    /**
+     * Instantiates a new unit removing pane.
+     *
+     * @param environment the grammar environment this pane will belong to
+     * @param grammar     the grammar to do the unit removal on
+     */
+    public UnitPane(GrammarEnvironment environment, Grammar grammar) {
+        this.environment = environment;
+        this.grammar = grammar;
+        controller = new UnitController(this, grammar);
+        initView();
+    }
 
-	/**
-	 * Initializes a table for the grammar.
-	 * 
-	 * @return a table to display the grammar
-	 */
-	private GrammarTable initGrammarTable() {
-		grammarTable = new GrammarTable(new GrammarTableModel(grammar) {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+    /**
+     * Initializes the GUI components of this pane.
+     */
+    private void initView() {
+        super.setLayout(new BorderLayout());
+        initGrammarTable();
+        JPanel rightPanel = initRightPanel();
+        JSplitPane mainSplit = SplitPaneFactory.createSplit(environment, true,
+            0.4, new JScrollPane(grammarTable), rightPanel);
+        this.add(mainSplit, BorderLayout.CENTER);
+    }
 
-			public boolean isCellEditable(int r, int c) {
-				return false;
-			}
-		});
-		return grammarTable;
-	}
+    /**
+     * Initializes the right panel.
+     */
+    private JPanel initRightPanel() {
+        JPanel right = new JPanel(new BorderLayout());
 
-	/**
-	 * Updates the delete action enabledness.
-	 */
-	void updateDeleteEnabledness() {
-		if (controller.step != UnitController.PRODUCTION_MODIFY) {
-			deleteAction.setEnabled(false);
-			return;
-		}
-		int min = editingGrammarView.getSelectionModel().getMinSelectionIndex();
-		if (min == -1 || min >= editingGrammarModel.getRowCount() - 1) {
-			deleteAction.setEnabled(false);
-			return;
-		}
-		deleteAction.setEnabled(true);
-	}
+        // Sets the alignments.
+        mainLabel.setAlignmentX(0.0f);
+        detailLabel.setAlignmentX(0.0f);
 
-	/**
-	 * Updates the complete selected action enabledness.
-	 */
-	void updateCompleteSelectedEnabledness() {
-		if (controller.step != UnitController.PRODUCTION_MODIFY) {
-			completeSelectedAction.setEnabled(false);
-			return;
-		}
-		int min = editingGrammarView.getSelectionModel().getMinSelectionIndex();
-		if (min == -1 || min >= editingGrammarModel.getRowCount() - 1) {
-			completeSelectedAction.setEnabled(false);
-			return;
-		}
-		completeSelectedAction.setEnabled(true);
-	}
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.add(mainLabel);
+        panel.add(detailLabel);
+        initEditingGrammarTable();
 
-	/**
-	 * Initializes the editing grammar view.
-	 */
-	private void initEditingGrammarTable() {
-		editingGrammarModel.addTableModelListener(new TableModelListener() {
-			public void tableChanged(TableModelEvent event) {
-				if (!editingActive)
-					return;
-				int r = event.getFirstRow();
-				if (event.getType() != TableModelEvent.UPDATE) {
-					// If we're editing anything, we have to get
-					// out of the funk.
-					return;
-				}
-				editingColumn[event.getColumn() >> 1] = true;
-				if (editingColumn[0] == true && editingColumn[1] == true) {
-					Production p = editingGrammarModel.getProduction(r);
-					if (p == null)
-						return;
-					if (!controller.productionAdded(p, r)) {
-						editingGrammarModel.deleteRow(r);
-					}
-					editingRow = -1;
-				}
-			}
-		});
-		/*
-		 * grammarTable.getSelectionModel().addListSelectionListener (new
-		 * ListSelectionListener() { public void valueChanged(ListSelectionEvent
-		 * event) { updateCompleteSelectedEnabledness(); }});
-		 */
-		editingGrammarView.getSelectionModel().addListSelectionListener(
-				new ListSelectionListener() {
-					public void valueChanged(ListSelectionEvent event) {
-						updateDeleteEnabledness();
-						updateCompleteSelectedEnabledness();
-					}
-				});
-		Object o = new Object();
-		editingGrammarView.getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), o);
-		editingGrammarView.getInputMap().put(
-				KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), o);
-		editingGrammarView.getActionMap().put(o, deleteAction);
-	}
+        // Sets up the editor pane.
 
-	/**
-	 * Calling this method discontinues any editing taking place.
-	 */
-	void cancelEditing() {
-		if (editingGrammarView.getCellEditor() != null)
-			editingGrammarView.getCellEditor().stopCellEditing();
-		if (editingRow != -1) {
-			editingGrammarModel.deleteRow(editingRow);
-			editingRow = -1;
-		}
-	}
+        vdgDrawer = new SelectionDrawer(controller.vdg);
+        vdgEditor = new EditorPane(vdgDrawer, new ToolBox() {
+            public java.util.List<Tool> tools(AutomatonPane view,
+                                              AutomatonDrawer drawer) {
+                java.util.List<Tool> t = new LinkedList<>();
+                t.add(new ArrowNontransitionTool(view, drawer) {
+                    public void mouseClicked(MouseEvent e) {
+                        super.mouseClicked(e);
+                        State s = vdgDrawer.stateAtPoint(e.getPoint());
+                        if (controller.step == UnitController.PRODUCTION_MODIFY) {
+                            controller.stateClicked(s, e);
+                        }
+                    }
+                });
+                t.add(new TransitionTool(view, drawer));
+                return t;
+            }
+        }, true);
+        // Grammar editor?
+        JPanel grammarEditor = new JPanel(new BorderLayout());
+        JToolBar editingBar = new JToolBar();
+        editingBar.setAlignmentX(0.0f);
+        editingBar.setFloatable(false);
+        editingBar.add(deleteAction);
+        editingBar.add(completeSelectedAction);
+        grammarEditor.add(editingBar, BorderLayout.NORTH);
+        grammarEditor.add(new JScrollPane(editingGrammarView),
+            BorderLayout.CENTER);
+        JSplitPane rightSplit = SplitPaneFactory.createSplit(environment,
+            false, 0.5, vdgEditor, grammarEditor);
+        panel.add(rightSplit);
 
-	/**
-	 * Returns a nice sorted grammar.
-	 */
-	public Grammar getGrammar() {
-		Grammar g = editingGrammarView.getGrammar(grammar.getClass());
-		Production p[] = g.getProductions();
-		final String S = grammar.getStartVariable();
-		Arrays.sort(p, new Comparator<Object>() {
-			public int compare(Object o1, Object o2) {
-				Production p1 = (Production) o1, p2 = (Production) o2;
-				if (S.equals(p1.getLHS())) {
-					if (p1.getLHS().equals(p2.getLHS()))
-						return 0;
-					else
-						return -1;
-				}
-				if (S.equals(p2.getLHS()))
-					return 1;
-				return p1.getLHS().compareTo(p2.getRHS());
-			}
-		});
-		Grammar g2 = null;
-		try {
-			g2 = (Grammar) g.getClass().newInstance();
-			g2.addProductions(p);
-			g2.setStartVariable(S);
-		} catch (Throwable e) {
-			System.err.println("BADNESS!");
-			System.err.println(e);
-			return g2;
-		}
-		return g2;
-	}
+        JToolBar toolbar = new JToolBar();
+        toolbar.setAlignmentX(0.0f);
+        toolbar.add(doStepAction);
+        toolbar.add(doAllAction);
+        toolbar.addSeparator();
+        toolbar.add(proceedAction);
+        toolbar.add(exportAction);
+        right.add(toolbar, BorderLayout.NORTH);
 
-	/**
-	 * This method should be called when the deletion method is called.
-	 */
-	private void deleteActivated() {
-		if (controller.step != UnitController.PRODUCTION_MODIFY)
-			return;
-		cancelEditing();
-		int deleted = 0, kept = 0;
-		for (int i = editingGrammarModel.getRowCount() - 2; i >= 0; i--) {
-			if (!editingGrammarView.isRowSelected(i))
-				continue;
-			Production p = editingGrammarModel.getProduction(i);
-			if (controller.productionDeleted(p, i)) {
-				editingGrammarModel.deleteRow(i);
-				deleted++;
-			} else {
-				kept++;
-			}
-		}
-		if (kept != 0) {
-			JOptionPane.showMessageDialog(this, kept
-					+ " production(s) selected should not be removed.\n"
-					+ deleted + " production(s) were removed.",
-					"Bad Selection", JOptionPane.ERROR_MESSAGE);
-		}
-		if (deleted != 0) {
-			controller.updateDisplay();
-		}
-	}
+        right.add(panel, BorderLayout.CENTER);
 
-	// These are some of the data structures relevant.
+        return right;
+    }
 
-	/** The grammar environment. */
-	GrammarEnvironment environment;
+    // These are some of the special structures relevant to the
+    // grammar editing table.
 
-	/** The grammar to remove unit productions on. */
-	Grammar grammar;
+    /**
+     * Initializes a table for the grammar.
+     *
+     * @return a table to display the grammar
+     */
+    private GrammarTable initGrammarTable() {
+        grammarTable = new GrammarTable(new GrammarTableModel(grammar) {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-	/** The controller object. */
-	UnitController controller;
+            public boolean isCellEditable(int r, int c) {
+                return false;
+            }
+        });
+        return grammarTable;
+    }
 
-	// These are some of the graphical elements.
+    /**
+     * Updates the delete action enabledness.
+     */
+    void updateDeleteEnabledness() {
+        if (controller.step != UnitController.PRODUCTION_MODIFY) {
+            deleteAction.setEnabled(false);
+            return;
+        }
+        int min = editingGrammarView.getSelectionModel().getMinSelectionIndex();
+        if (min == -1 || min >= editingGrammarModel.getRowCount() - 1) {
+            deleteAction.setEnabled(false);
+            return;
+        }
+        deleteAction.setEnabled(true);
+    }
 
-	/** The grammar table. */
-	GrammarTable grammarTable;
+    /**
+     * Updates the complete selected action enabledness.
+     */
+    void updateCompleteSelectedEnabledness() {
+        if (controller.step != UnitController.PRODUCTION_MODIFY) {
+            completeSelectedAction.setEnabled(false);
+            return;
+        }
+        int min = editingGrammarView.getSelectionModel().getMinSelectionIndex();
+        if (min == -1 || min >= editingGrammarModel.getRowCount() - 1) {
+            completeSelectedAction.setEnabled(false);
+            return;
+        }
+        completeSelectedAction.setEnabled(true);
+    }
 
-	/** The main instruction label. */
-	JLabel mainLabel = new JLabel(" ");
+    /**
+     * Initializes the editing grammar view.
+     */
+    private void initEditingGrammarTable() {
+        editingGrammarModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent event) {
+                if (!editingActive) {
+                    return;
+                }
+                int r = event.getFirstRow();
+                if (event.getType() != TableModelEvent.UPDATE) {
+                    // If we're editing anything, we have to get
+                    // out of the funk.
+                    return;
+                }
+                editingColumn[event.getColumn() >> 1] = true;
+                if (editingColumn[0] == true && editingColumn[1] == true) {
+                    Production p = editingGrammarModel.getProduction(r);
+                    if (p == null) {
+                        return;
+                    }
+                    if (!controller.productionAdded(p, r)) {
+                        editingGrammarModel.deleteRow(r);
+                    }
+                    editingRow = -1;
+                }
+            }
+        });
+        /*
+         * grammarTable.getSelectionModel().addListSelectionListener (new
+         * ListSelectionListener() { public void valueChanged(ListSelectionEvent
+         * event) { updateCompleteSelectedEnabledness(); }});
+         */
+        editingGrammarView.getSelectionModel().addListSelectionListener(
+            new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent event) {
+                    updateDeleteEnabledness();
+                    updateCompleteSelectedEnabledness();
+                }
+            });
+        Object o = new Object();
+        editingGrammarView.getInputMap().put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0), o);
+        editingGrammarView.getInputMap().put(
+            KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), o);
+        editingGrammarView.getActionMap().put(o, deleteAction);
+    }
 
-	/** The detail instruction label. */
-	JLabel detailLabel = new JLabel(" ");
+    /**
+     * Calling this method discontinues any editing taking place.
+     */
+    void cancelEditing() {
+        if (editingGrammarView.getCellEditor() != null) {
+            editingGrammarView.getCellEditor().stopCellEditing();
+        }
+        if (editingRow != -1) {
+            editingGrammarModel.deleteRow(editingRow);
+            editingRow = -1;
+        }
+    }
 
-	/** The editor pane. */
-	EditorPane vdgEditor;
+    /**
+     * Returns a nice sorted grammar.
+     */
+    public Grammar getGrammar() {
+        Grammar g = editingGrammarView.getGrammar(grammar.getClass());
+        Production[] p = g.getProductions();
+        final String S = grammar.getStartVariable();
+        Arrays.sort(p, new Comparator<Object>() {
+            public int compare(Object o1, Object o2) {
+                Production p1 = (Production) o1, p2 = (Production) o2;
+                if (S.equals(p1.getLHS())) {
+                    if (p1.getLHS().equals(p2.getLHS())) {
+                        return 0;
+                    } else {
+                        return -1;
+                    }
+                }
+                if (S.equals(p2.getLHS())) {
+                    return 1;
+                }
+                return p1.getLHS().compareTo(p2.getRHS());
+            }
+        });
+        Grammar g2 = null;
+        try {
+            g2 = g.getClass().newInstance();
+            g2.addProductions(p);
+            g2.setStartVariable(S);
+        } catch (Throwable e) {
+            System.err.println("BADNESS!");
+            System.err.println(e);
+            return g2;
+        }
+        return g2;
+    }
 
-	/** The vdg drawer. */
-	SelectionDrawer vdgDrawer;
-
-	// These are general controls.
-	AbstractAction doStepAction = new AbstractAction("Do Step") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			controller.doStep();
-		}
-	};
-
-	AbstractAction doAllAction = new AbstractAction("Do All") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			controller.doAll();
-		}
-	};
-
-	AbstractAction proceedAction = new AbstractAction("Proceed") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			GrammarTransformAction
-					.hypothesizeUseless(environment, getGrammar());
-		}
-	};
-
-	AbstractAction exportAction = new AbstractAction("Export") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			FrameFactory.createFrame(getGrammar());
-		}
-	};
-
-	// These are some of the special structures relevant to the
-	// grammar editing table.
-
-	/** Simple kludge to allow us to add stuff to the table without fear. */
-	boolean editingActive = false;
-
-	/** The editing row in the table. */
-	private int editingRow = -1;
-
-	/** Which columsn of the editing row have been edited yet? */
-	private boolean editingColumn[] = new boolean[2];
-
-	/** The editing grammar table mode. */
-	GrammarTableModel editingGrammarModel = new GrammarTableModel() {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public boolean isCellEditable(int r, int c) {
-			if (!editingActive)
-				return false;
-			if (controller.step != UnitController.PRODUCTION_MODIFY)
-				return false;
-			if (c == 1)
-				return false;
-			if (editingRow == -1) {
-				if (r == getRowCount() - 1) {
-					editingRow = r;
-					editingColumn[0] = editingColumn[1] = false;
-					return true;
-				}
-				return false;
-			} else
-				return editingRow == r;
-		}
-	};
-
-	/** The editing grammar table view. */
-	GrammarTable editingGrammarView = new GrammarTable(editingGrammarModel);
-
-	/** The delete action for deleting rows. */
-	AbstractAction deleteAction = new AbstractAction("Delete") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			deleteActivated();
-		}
-	};
-
-	/** The complete selected action. */
-	AbstractAction completeSelectedAction = new AbstractAction(
-			"Complete Selected") {
-		/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			cancelEditing();
-			controller.doSelected();
-		}
-	};
+    /**
+     * This method should be called when the deletion method is called.
+     */
+    private void deleteActivated() {
+        if (controller.step != UnitController.PRODUCTION_MODIFY) {
+            return;
+        }
+        cancelEditing();
+        int deleted = 0, kept = 0;
+        for (int i = editingGrammarModel.getRowCount() - 2; i >= 0; i--) {
+            if (!editingGrammarView.isRowSelected(i)) {
+                continue;
+            }
+            Production p = editingGrammarModel.getProduction(i);
+            if (controller.productionDeleted(p, i)) {
+                editingGrammarModel.deleteRow(i);
+                deleted++;
+            } else {
+                kept++;
+            }
+        }
+        if (kept != 0) {
+            JOptionPane.showMessageDialog(this, kept
+                    + " production(s) selected should not be removed.\n"
+                    + deleted + " production(s) were removed.",
+                "Bad Selection", JOptionPane.ERROR_MESSAGE);
+        }
+        if (deleted != 0) {
+            controller.updateDisplay();
+        }
+    }
 }

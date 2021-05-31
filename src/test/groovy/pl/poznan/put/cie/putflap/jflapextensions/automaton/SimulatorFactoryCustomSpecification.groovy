@@ -13,7 +13,7 @@ import spock.lang.Unroll
 
 class SimulatorFactoryCustomSpecification extends Specification {
     @Unroll
-    def "should get proper simulator" () {
+    def "should get proper simulator"() {
         when:
         def simulator = SimulatorFactoryCustom.INSTANCE.getSimulator(automaton)
 

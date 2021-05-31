@@ -2,7 +2,7 @@ package pl.poznan.put.cie.putflap.report.test
 
 import pl.poznan.put.cie.putflap.report.Report
 
-data class MultipleAlphabetReport (
+data class MultipleAlphabetReport(
     val reports: Array<AlphabetReport>
 ) : Report() {
     override fun equals(other: Any?): Boolean {

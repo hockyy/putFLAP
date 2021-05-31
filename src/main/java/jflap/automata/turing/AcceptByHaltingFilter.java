@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,17 +15,17 @@
  */
 
 
-
-
 //MERLIN MERLIN MERLIN MERLIN MERLIN//
 
 package jflap.automata.turing;
 
-public class AcceptByHaltingFilter implements AcceptanceFilter{ //note that building blocks should be STRIPPED of FINAL states //or we could simply ignore final states in nonTopLevel.
-    public boolean accept(TMConfiguration tmc){
+public class AcceptByHaltingFilter implements
+    AcceptanceFilter { //note that building blocks should be STRIPPED of FINAL states //or we could simply ignore final states in nonTopLevel.
+    public boolean accept(TMConfiguration tmc) {
         return tmc.isHalted();
     }
-    public String getName(){
+
+    public String getName() {
         return "Accept by Halting";
     }
 }

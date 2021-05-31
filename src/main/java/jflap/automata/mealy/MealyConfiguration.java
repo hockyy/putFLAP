@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.automata.mealy;
 
 import jflap.automata.Configuration;
@@ -28,14 +25,12 @@ import jflap.automata.State;
  * object with an additional field for the read string and the output string.
  * The output is saved as a separate field that is passed in through the
  * constructor. All additional output appended to the output passed in.
- * A <code>MealyConfiguration</code> serves both the 
+ * A <code>MealyConfiguration</code> serves both the
  * {@link jflap.automata.mealy.MealyMachine} and the {@link jflap.automata.mealy.MooreMachine}
- * 
- * @author Jinghui Lim
  *
+ * @author Jinghui Lim
  */
-public class MealyConfiguration extends Configuration 
-{
+public class MealyConfiguration extends Configuration {
     /**
      * The total read.
      */
@@ -48,125 +43,114 @@ public class MealyConfiguration extends Configuration
      * The processed output.
      */
     private String myOutput = "";
-    
+
     /**
      * Constructs a new <code>MealyConfiguration</code>.
-     * 
-     * @param state the state that the MealyMachine is currently in
-     * @param parent the configuration that is the parent of this configuration
-     * @param input the entire test read
+     *
+     * @param state       the state that the MealyMachine is currently in
+     * @param parent      the configuration that is the parent of this configuration
+     * @param input       the entire test read
      * @param unprocessed the unprocessed read
-     * @param output the ouput produced before this configuration
+     * @param output      the ouput produced before this configuration
      */
-    public MealyConfiguration(State state, MealyConfiguration parent, 
-            String input, String unprocessed, String output) 
-    {
+    public MealyConfiguration(State state, MealyConfiguration parent,
+                              String input, String unprocessed, String output) {
         super(state, parent);
         myInput = input;
         myUnprocessedInput = unprocessed;
         myOutput = output;
     }
-    
+
     /**
      * Returns the total read.
-     * 
+     *
      * @return total read
      */
-    public String getInput()
-    {
+    public String getInput() {
         return myInput;
     }
-    
+
     /**
      * Returns the unprocessed read.
-     * 
+     *
      * @return unprocessed read
      */
-    public String getUnprocessedInput()
-    {
+    public String getUnprocessedInput() {
         return myUnprocessedInput;
     }
-    
+
+    /**
+     * Changes the unprocessed read.
+     *
+     * @param input the string that will replace the unprocessed read
+     */
+    public void setUnprocessedInput(String input) {
+        myUnprocessedInput = input;
+    }
+
     /**
      * Returns the output produced by previous ancestor configurations.
      * This is the only way to obtain the output produced by a Mealy
      * machine, as <code>Configuration.isAccept()</code> returns a
      * <code>boolean</code>.
-     * 
+     *
      * @return output by ancestor configurations.
      */
-    public String getOutput()
-    {
+    public String getOutput() {
         return myOutput;
     }
-    
-    /**
-     * Changes the unprocessed read.
-     * 
-     * @param input the string that will replace the unprocessed read
-     */
-    public void setUnprocessedInput(String input)
-    {
-        myUnprocessedInput = input;
-    }
-    
+
     /**
      * Returns a string representation of this configuration.
-     * 
+     *
      * @return string representation of this configuration.
      */
-    public String toString()
-    {
+    public String toString() {
         return super.toString() + ": " + getUnprocessedInput() + "--" + getOutput();
     }
 
     /**
      * Accepts if there is no more unprocessed read (all of the read has been
      * process and output generated).
-     * 
+     *
      * @return <code>true</code> if all read has been processed,
      * <code>false</code> otherwise.
      */
-    public boolean isAccept() 
-    {
+    public boolean isAccept() {
         return getUnprocessedInput().length() == 0;
     }
-    
+
     /**
-     * This function checks if two configurations are equal. Two configurations 
+     * This function checks if two configurations are equal. Two configurations
      * are equal if they have the same output and unprocessed read and satisfy
      * the <code>.equals()</code> test of the base <code>Configuration</code>
-     * class. 
-     * 
-     * @see jflap.automata.Configuration#equals(Object)
+     * class.
+     *
      * @param configuration the configuration to check for equality
      * @return <code>true</code> if the two configurations are equal,
      * <code>false</code> otherwise
+     * @see jflap.automata.Configuration#equals(Object)
      */
-    public boolean equals(Object configuration)
-    {
-        if(configuration == this)
+    public boolean equals(Object configuration) {
+        if (configuration == this) {
             return true;
-        try
-        {
+        }
+        try {
             MealyConfiguration config = (MealyConfiguration) configuration;
-            return super.equals(config) && 
+            return super.equals(config) &&
                 myUnprocessedInput.equals(config.myUnprocessedInput) &&
                 myOutput.equals(config.myOutput);
-        }
-        catch(ClassCastException e)
-        {
+        } catch (ClassCastException e) {
             return false;
         }
     }
 
     /**
      * Returns a hashcode for this object.
-     * 
+     *
      * @return hashcode for this object
      */
-    public int hashCode()
-    {
+    public int hashCode() {
         return super.hashCode() ^ myUnprocessedInput.hashCode() ^ myOutput.hashCode();
     }
 }

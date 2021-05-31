@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.file;
 
 /**
@@ -25,30 +22,29 @@ package jflap.file;
  * prevent the interpreter from working correctly. This should be thrown by
  * {@link jflap.file.Decoder} implementing objects to indicate a problem processing
  * the jflap.file that could indicate that it is not the target type of jflap.file at all.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class ParseException extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates a generic parse exception.
-	 */
-	public ParseException() {
-		super();
-	}
+    /**
+     * Creates a generic parse exception.
+     */
+    public ParseException() {
+        super();
+    }
 
-	/**
-	 * Creates a parse exception with the given message.
-	 * 
-	 * @param message
-	 *            the exception message
-	 */
-	public ParseException(String message) {
-		super(message);
-	}
+    /**
+     * Creates a parse exception with the given message.
+     *
+     * @param message the exception message
+     */
+    public ParseException(String message) {
+        super(message);
+    }
 }

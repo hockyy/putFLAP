@@ -1,6 +1,6 @@
 package pl.poznan.put.cie.putflap.report
 
-data class WordsReport (
+data class WordsReport(
     val requestedNumber: Int,
     val generatedNumber: Int,
     val words: Array<String>

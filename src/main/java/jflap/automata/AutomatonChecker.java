@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.automata;
 
 import jflap.automata.fsa.FSANondeterminismDetector;
@@ -26,35 +23,34 @@ import jflap.automata.fsa.FiniteStateAutomaton;
 /**
  * The Automaton checker can be used to determine certain properties about
  * jflap.automata.
- * 
+ *
  * @author Ryan Cavalcante
  */
 
 public class AutomatonChecker {
-	/**
-	 * Creates instance of <CODE>AutomatonChecker</CODE>.
-	 */
-	public AutomatonChecker() {
+    /**
+     * Creates instance of <CODE>AutomatonChecker</CODE>.
+     */
+    public AutomatonChecker() {
 
-	}
+    }
 
-	/**
-	 * Returns true if <CODE>automaton</CODE> is a non-deterministic finite
-	 * state automaton.
-	 * 
-	 * @param automaton
-	 *            the automaton.
-	 * @return true if <CODE>automaton</CODE> is a non-deterministic finite
-	 *         state automaton.
-	 */
-	public boolean isNFA(Automaton automaton) {
-		if (!(automaton instanceof FiniteStateAutomaton)) {
-			return false;
-		}
-		NondeterminismDetector nd = new FSANondeterminismDetector();
-		State[] nondeterministicStates = nd
-				.getNondeterministicStates(automaton);
-		return nondeterministicStates.length > 0;
-	}
+    /**
+     * Returns true if <CODE>automaton</CODE> is a non-deterministic finite
+     * state automaton.
+     *
+     * @param automaton the automaton.
+     * @return true if <CODE>automaton</CODE> is a non-deterministic finite
+     * state automaton.
+     */
+    public boolean isNFA(Automaton automaton) {
+        if (!(automaton instanceof FiniteStateAutomaton)) {
+            return false;
+        }
+        NondeterminismDetector nd = new FSANondeterminismDetector();
+        State[] nondeterministicStates = nd
+            .getNondeterministicStates(automaton);
+        return nondeterministicStates.length > 0;
+    }
 
 }

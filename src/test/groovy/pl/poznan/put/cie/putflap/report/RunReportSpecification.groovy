@@ -25,11 +25,11 @@ class RunReportSpecification extends Specification {
         runReport.error == null
 
         where:
-        automatonType        | accepted
-        AutomatonType.FA     | true
-        AutomatonType.MOORE  | false
-        AutomatonType.MEALY  | true
-        AutomatonType.PDA    | false
+        automatonType       | accepted
+        AutomatonType.FA    | true
+        AutomatonType.MOORE | false
+        AutomatonType.MEALY | true
+        AutomatonType.PDA   | false
     }
 
     @Unroll
@@ -52,10 +52,10 @@ class RunReportSpecification extends Specification {
 
         where:
         automatonType << [
-                    AutomatonType.FA,
-                    AutomatonType.MOORE,
-                    AutomatonType.MEALY,
-                    AutomatonType.PDA,
-                ]
+                AutomatonType.FA,
+                AutomatonType.MOORE,
+                AutomatonType.MEALY,
+                AutomatonType.PDA,
+        ]
     }
 }

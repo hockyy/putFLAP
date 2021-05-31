@@ -36,8 +36,8 @@ class AutomatonGenerator(
 
     init {
         states.add(0, Pair(0, StateType.INITIAL))
-        for(i in 1 until (n - finalStates)) states.add(i, Pair(i, StateType.STATE))
-        for(i in (n - finalStates) until n) states.add(i, Pair(i, StateType.FINAL))
+        for (i in 1 until (n - finalStates)) states.add(i, Pair(i, StateType.STATE))
+        for (i in (n - finalStates) until n) states.add(i, Pair(i, StateType.FINAL))
     }
 
     /**
@@ -57,8 +57,8 @@ class AutomatonGenerator(
         val automaton = FiniteStateAutomaton()
         val addedStates = addStates(automaton)
 
-        addTransitions(automaton, addedStates) {
-                inState, outState, letter -> FSATransition(inState, outState, letter)
+        addTransitions(automaton, addedStates) { inState, outState, letter ->
+            FSATransition(inState, outState, letter)
         }
 
         return automaton
@@ -80,8 +80,8 @@ class AutomatonGenerator(
         val automaton = MealyMachine()
         val addedStates = addStates(automaton)
 
-        addTransitions(automaton, addedStates) {
-                inState, outState, letter -> MealyTransition(inState, outState, letter, getRandomOutputLetter())
+        addTransitions(automaton, addedStates) { inState, outState, letter ->
+            MealyTransition(inState, outState, letter, getRandomOutputLetter())
         }
 
         return automaton
@@ -103,10 +103,10 @@ class AutomatonGenerator(
         val automaton = MooreMachine()
         val addedStates = addStates(automaton)
 
-        for(state in addedStates) automaton.setOutput(state, getRandomOutputLetter())
+        for (state in addedStates) automaton.setOutput(state, getRandomOutputLetter())
 
-        addTransitions(automaton, addedStates) {
-                inState, outState, letter -> MooreTransition(inState, outState, letter)
+        addTransitions(automaton, addedStates) { inState, outState, letter ->
+            MooreTransition(inState, outState, letter)
         }
 
         return automaton
@@ -136,15 +136,15 @@ class AutomatonGenerator(
      * Generates at least one IN to each non-initial state
      */
     private fun oneInToEachNonInitialState() {
-        for(state in states) if(state.second != StateType.INITIAL) {
+        for (state in states) if (state.second != StateType.INITIAL) {
             val ins = run {
                 var count = 0
-                for(i in 0 until states.size)
+                for (i in 0 until states.size)
                     count += matrix[i].count { it == state.first }
                 count
             }
 
-            if(ins == 0) {
+            if (ins == 0) {
                 val outState = getRandomState(states.size, state.first)
                 val letter = chooseLetter(outState)
                 matrix[outState][letter] = state.first
@@ -157,9 +157,9 @@ class AutomatonGenerator(
      * Generates at least one OUT from each non-final state
      */
     private fun oneOutFromEachNonFinalState() {
-        for(state in states) if(state.second != StateType.FINAL) {
+        for (state in states) if (state.second != StateType.FINAL) {
             val outs = matrix[state.first].count { it != -1 }
-            if(outs == 0) {
+            if (outs == 0) {
                 val letter = chooseLetter(state.first)
                 val inState = getRandomState(states.size, state.first)
                 matrix[state.first][letter] = inState
@@ -179,7 +179,7 @@ class AutomatonGenerator(
                 var state: Int
                 do {
                     state = getRandomState(states.size)
-                } while(getOutNumber(state) == alphabet.size)
+                } while (getOutNumber(state) == alphabet.size)
                 state
             }
 
@@ -207,7 +207,7 @@ class AutomatonGenerator(
         var state: Int
         do {
             state = (Math.floor(Math.random() * length)).toInt()
-        } while(state == notEqualTo)
+        } while (state == notEqualTo)
         return state
     }
 
@@ -232,7 +232,8 @@ class AutomatonGenerator(
             automaton.addState(addedStates.last())
             when (state.second) {
                 StateType.INITIAL -> automaton.initialState = addedStates.last()
-                StateType.STATE -> {}
+                StateType.STATE -> {
+                }
                 StateType.FINAL -> automaton.addFinalState(addedStates.last())
             }
         }
@@ -240,13 +241,19 @@ class AutomatonGenerator(
         return addedStates
     }
 
-    private fun addTransitions(automaton: Automaton, addedStates: List<State>, transitionClass: (State, State, String) -> Transition) {
+    private fun addTransitions(
+        automaton: Automaton,
+        addedStates: List<State>,
+        transitionClass: (State, State, String) -> Transition
+    ) {
         for (state in 0 until states.size) for (letter in 0 until alphabet.size)
             if (matrix[state][letter] != -1)
-                automaton.addTransition(transitionClass(
-                    addedStates[state],
-                    addedStates[matrix[state][letter]],
-                    alphabet[letter]
-                ))
+                automaton.addTransition(
+                    transitionClass(
+                        addedStates[state],
+                        addedStates[matrix[state][letter]],
+                        alphabet[letter]
+                    )
+                )
     }
 }

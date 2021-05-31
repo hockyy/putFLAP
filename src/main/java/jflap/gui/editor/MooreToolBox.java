@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,52 +15,45 @@
  */
 
 
-
-
-
 package jflap.gui.editor;
-
-import jflap.gui.viewer.AutomatonDrawer;
-import jflap.gui.viewer.AutomatonPane;
 
 import java.util.ArrayList;
 import java.util.List;
+import jflap.gui.viewer.AutomatonDrawer;
+import jflap.gui.viewer.AutomatonPane;
 
 /**
  * This is a special <code>ToolBox</code> for Moore machines
  * that loads the <code>MooreArrowTool</code> and <code>
  * MooreStateTool</code> instead of the default <code>
  * ArrowTool</code> and <code>StateTool</code>.
- * 
+ *
+ * @author Jinghui Lim
  * @see mealy.MooreMachine
  * @see MooreArrowTool
  * @see MooreStateTool
- * @author Jinghui Lim
- * 
  */
-public class MooreToolBox implements ToolBox 
-{
+public class MooreToolBox implements ToolBox {
     /**
      * Returns a list of tools for Moore machines, similar to
      * the <code>DefaultToolBox</code>. This includes a
      * <code>MooreArrowTool</code>, <code>MooreStateTool</code>
      * <code>TransitionTool</code>, and <code>DeleteTool</code>
      * in that order.
-     * 
-     * @param view the component that the automaton will be drawn in
+     *
+     * @param view   the component that the automaton will be drawn in
      * @param drawer the drawer that will draw the automaton in the
-     * view
+     *               view
      * @return a list of <CODE>Tool</CODE> objects.
      */
-    public List<Tool> tools(AutomatonPane view, AutomatonDrawer drawer) 
-    {
+    public List<Tool> tools(AutomatonPane view, AutomatonDrawer drawer) {
         List<Tool> list = new ArrayList<>();
         list.add(new MooreArrowTool(view, drawer));
         list.add(new MooreStateTool(view, drawer));
         list.add(new TransitionTool(view, drawer));
         list.add(new DeleteTool(view, drawer));
-		list.add(new UndoTool(view, drawer));
-		list.add(new RedoTool(view, drawer));
+        list.add(new UndoTool(view, drawer));
+        list.add(new RedoTool(view, drawer));
         return list;
     }
 }

@@ -9,9 +9,10 @@ import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.types.choice
 
-internal object ConvertCLI : CliktCommand(name = "convert", help = "perform various conversion tasks on automaton and grammars") {
+internal object ConvertCLI :
+    CliktCommand(name = "convert", help = "perform various conversion tasks on automaton and grammars") {
 
-    private val type by option("-t", "--type",  help = "type of conversion to perform")
+    private val type by option("-t", "--type", help = "type of conversion to perform")
         .choice(*Array(Types.ConvertType.values().size) { Types.ConvertType.values()[it].name.toLowerCase() })
         .convert { Types.ConvertType.valueOf(it.toUpperCase()) }
         .required()
@@ -23,7 +24,6 @@ internal object ConvertCLI : CliktCommand(name = "convert", help = "perform vari
         .multiple()
 
     override fun run() = Commands.convert(type, json, inputs.toTypedArray())
-
 
 
 }

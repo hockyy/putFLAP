@@ -2,7 +2,7 @@ package pl.poznan.put.cie.putflap.report.test
 
 import pl.poznan.put.cie.putflap.report.Report
 
-data class MultipleNondeterminismReport (
+data class MultipleNondeterminismReport(
     val allDeterministic: Boolean,
     val reports: Array<NondeterminismReport>
 ) : Report() {

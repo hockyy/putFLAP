@@ -9,7 +9,7 @@ class GrammarGeneratorSpecification extends Specification {
     def grammarGenerator = new GrammarGenerator(5, 2, ["a", "b", "c", "d", "e", "f"] as String[])
 
     @Unroll
-    def "should return random regular grammar with specified parameters" () {
+    def "should return random regular grammar with specified parameters"() {
         given:
         def grammarGenerator = new GrammarGenerator(n, finals, alphabet as String[])
 
@@ -21,10 +21,10 @@ class GrammarGeneratorSpecification extends Specification {
         getLambda(grammar) == finals
 
         where:
-        n  | finals  | alphabet
-        5  | 2       | ["a", "b", "c", "d", "e", "f"]
-        5  | 2       | ["one", "two", "three", "four", "five", "six"]
-        22 | 10      | ["a", "b", "c", "d", "e", "f", "g", "h"]
+        n  | finals | alphabet
+        5  | 2      | ["a", "b", "c", "d", "e", "f"]
+        5  | 2      | ["one", "two", "three", "four", "five", "six"]
+        22 | 10     | ["a", "b", "c", "d", "e", "f", "g", "h"]
     }
 
     @Unroll

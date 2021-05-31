@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.file;
 
 import java.io.File;
@@ -29,68 +26,60 @@ import java.util.Map;
  * making any conversions necessary between the two formats. Lenore-Systems is
  * my name for the L-systems tool developed at Duke by Lenore Ramm. Its real
  * name is Lsys, and was never widely distributed.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class LenoreSystemsCodec extends Codec {
-	/**
-	 * Given a jflap.file, this will return an L-system associated with that jflap.file.
-	 * This method should always return a structure, or throw a
-	 * {@link ParseException} in the event of failure with a message detailing
-	 * the nature of why the decoder failed.
-	 * 
-	 * @param file
-	 *            the jflap.file to decode into a structure
-	 * @param parameters
-	 *            this decoder ignores all parameters
-	 * @return a JFLAP structure resulting from the interpretation of the
-	 *         Lenore-Systems jflap.file
-	 * @throws ParseException
-	 *             if there was a problem reading the jflap.file
-	 */
-	public Serializable decode(File file, Map<?, ?> parameters) {
-		throw new ParseException("This codec is not implemented yet.");
-	}
+    /**
+     * Given a jflap.file, this will return an L-system associated with that jflap.file.
+     * This method should always return a structure, or throw a
+     * {@link ParseException} in the event of failure with a message detailing
+     * the nature of why the decoder failed.
+     *
+     * @param file       the jflap.file to decode into a structure
+     * @param parameters this decoder ignores all parameters
+     * @return a JFLAP structure resulting from the interpretation of the
+     * Lenore-Systems jflap.file
+     * @throws ParseException if there was a problem reading the jflap.file
+     */
+    public Serializable decode(File file, Map<?, ?> parameters) {
+        throw new ParseException("This codec is not implemented yet.");
+    }
 
-	/**
-	 * This method does nothing at all.
-	 * 
-	 * @param structure
-	 *            the structure to encode
-	 * @param file
-	 *            the jflap.file to write to -- nothing is written, of course
-	 * @param parameters
-	 *            implementors have the option of accepting custom parameters in
-	 *            the form of a map
-	 * @return the jflap.file to which the structure was written
-	 * @throws EncodeException
-	 *             if there was a problem writing the jflap.file
-	 */
-	public File encode(Serializable structure, File file, Map<?, ?> parameters) {
-		return file;
-	}
+    /**
+     * This method does nothing at all.
+     *
+     * @param structure  the structure to encode
+     * @param file       the jflap.file to write to -- nothing is written, of course
+     * @param parameters implementors have the option of accepting custom parameters in
+     *                   the form of a map
+     * @return the jflap.file to which the structure was written
+     * @throws EncodeException if there was a problem writing the jflap.file
+     */
+    public File encode(Serializable structure, File file, Map<?, ?> parameters) {
+        return file;
+    }
 
-	/**
-	 * This encoder can encode nothing.
-	 * 
-	 * @param structure
-	 *            the structure to check
-	 * @return if the structure, perhaps with minor changes, could possibly be
-	 *         written to a jflap.file
-	 */
-	public boolean canEncode(Serializable structure) {
-		return false;
-	}
+    /**
+     * This encoder can encode nothing.
+     *
+     * @param structure the structure to check
+     * @return if the structure, perhaps with minor changes, could possibly be
+     * written to a jflap.file
+     */
+    public boolean canEncode(Serializable structure) {
+        return false;
+    }
 
-	/**
-	 * Returns the description of this codec.
-	 * 
-	 * @return the description of this codec
-	 */
-	public String getDescription() {
-		return "Lenore-Systems File";
-	}
+    /**
+     * Returns the description of this codec.
+     *
+     * @return the description of this codec
+     */
+    public String getDescription() {
+        return "Lenore-Systems File";
+    }
 
-	/** The assignment of Lenore-Systems color names to L-systems names. */
+    /** The assignment of Lenore-Systems color names to L-systems names. */
 }

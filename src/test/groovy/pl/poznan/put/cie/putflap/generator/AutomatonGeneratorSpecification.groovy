@@ -13,7 +13,7 @@ class AutomatonGeneratorSpecification extends Specification {
     def n = 5
     def alphabet = ["a", "b", "c", "d", "e", "f"] as String[]
     def finals = 2
-    def automatonGenerator = new AutomatonGenerator(n ,alphabet, finals, alphabet)
+    def automatonGenerator = new AutomatonGenerator(n, alphabet, finals, alphabet)
 
     @Unroll
     def "should return random FSA with given parameters"() {

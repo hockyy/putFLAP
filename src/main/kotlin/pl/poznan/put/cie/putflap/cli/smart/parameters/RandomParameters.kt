@@ -2,7 +2,7 @@ package pl.poznan.put.cie.putflap.cli.smart.parameters
 
 import pl.poznan.put.cie.putflap.cli.Types
 
-data class RandomParameters (
+data class RandomParameters(
     val type: Types.RandomType,
     val n: Int,
     val finals: Int,

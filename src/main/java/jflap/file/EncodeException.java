@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,39 +15,35 @@
  */
 
 
-
-
-
 package jflap.file;
 
 /**
  * This error indicates that a structure could not be properly encoded with the
  * encoder. This should be thrown by {@link jflap.file.Encoder} implementing objects
  * to indicate a problem writing the jflap.file.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class EncodeException extends RuntimeException {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates a generic encoder exception.
-	 */
-	public EncodeException() {
-		super();
-	}
+    /**
+     * Creates a generic encoder exception.
+     */
+    public EncodeException() {
+        super();
+    }
 
-	/**
-	 * Creates a encode exception with the given message.
-	 * 
-	 * @param message
-	 *            the exception message
-	 */
-	public EncodeException(String message) {
-		super(message);
-	}
+    /**
+     * Creates a encode exception with the given message.
+     *
+     * @param message the exception message
+     */
+    public EncodeException(String message) {
+        super(message);
+    }
 }

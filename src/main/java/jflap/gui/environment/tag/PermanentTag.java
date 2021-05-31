@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,15 +15,12 @@
  */
 
 
-
-
-
 package jflap.gui.environment.tag;
 
 /**
  * This is a tag that should be ascribed to an object that is "permanent," that
  * is, one that should not be able to be removed.
- * 
+ *
  * @author Thomas Finley
  */
 

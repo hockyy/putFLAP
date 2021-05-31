@@ -19,7 +19,7 @@ data class AutomatonReport internal constructor(
     val type: AutomatonType,
     val states: Array<StateReport>,
     val transitions: Array<TransitionReport>
-    ) : StructureReport() {
+) : StructureReport() {
 
     companion object {
         fun generate(automaton: Automaton): AutomatonReport = when (automaton) {
@@ -58,7 +58,7 @@ data class AutomatonReport internal constructor(
             }
             transitions
         }.invoke()
-        )
+    )
 
     constructor(automaton: MooreMachine) : this(
         AutomatonType.MOORE,

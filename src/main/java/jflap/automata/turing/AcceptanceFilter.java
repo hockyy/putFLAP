@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,11 +15,10 @@
  */
 
 
-
-
-
 package jflap.automata.turing;
-public interface AcceptanceFilter{
+
+public interface AcceptanceFilter {
     boolean accept(TMConfiguration tmc);
+
     String getName();
 }

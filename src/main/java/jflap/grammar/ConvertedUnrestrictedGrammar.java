@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,59 +15,54 @@
  */
 
 
-
-
 package jflap.grammar;
 
 /**
  * Special jflap.grammar for JFLAP to recognized that Grammar is "converted jflap.grammar from Turing Mahcine"
- * @author Kyung Min (Jason) Lee
  *
+ * @author Kyung Min (Jason) Lee
  */
 public class ConvertedUnrestrictedGrammar extends Grammar {
 
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private boolean myTuringBool=false;
-	/**
-	 * Every production is all right except those with lambda in the left hand
-	 * side of the production.
-	 * 
-	 * @param production
-	 *            the production to check
-	 * @throws IllegalArgumentException
-	 *             if the production is lambda on the left hand side
-	 */
-	public void checkProduction(Production production) {
-		if (production.getLHS().length() == 0) {
-			throw new IllegalArgumentException(
-					"The left hand side cannot be empty.");
-		}
-	}
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private final boolean myTuringBool = false;
 
-	/**
-	 * This adds a production to the jflap.grammar.
-	 * 
-	 * @param production
-	 *            the production to add
-	 * @throws IllegalArgumentException
-	 *             if the first production added is unrestricted on the left
-	 *             hand side
-	 */
-	public void addProduction(Production production) {
+    /**
+     * Every production is all right except those with lambda in the left hand
+     * side of the production.
+     *
+     * @param production the production to check
+     * @throws IllegalArgumentException if the production is lambda on the left hand side
+     */
+    public void checkProduction(Production production) {
+        if (production.getLHS().length() == 0) {
+            throw new IllegalArgumentException(
+                "The left hand side cannot be empty.");
+        }
+    }
+
+    /**
+     * This adds a production to the jflap.grammar.
+     *
+     * @param production the production to add
+     * @throws IllegalArgumentException if the first production added is unrestricted on the left
+     *                                  hand side
+     */
+    public void addProduction(Production production) {
 		/*if (myProductions.size() == 0
 				&& !ProductionChecker.isRestrictedOnLHS(production))
 			throw new IllegalArgumentException(
 					"The first production must be restricted.");*/
-		super.addProduction(production);
-	}
+        super.addProduction(production);
+    }
 
-	@Override
-	public boolean isConverted() {
-		// TODO Auto-generated method stub
-		return true;
-	}
+    @Override
+    public boolean isConverted() {
+        // TODO Auto-generated method stub
+        return true;
+    }
 }

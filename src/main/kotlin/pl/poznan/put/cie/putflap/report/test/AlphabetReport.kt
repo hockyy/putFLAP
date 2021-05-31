@@ -2,7 +2,7 @@ package pl.poznan.put.cie.putflap.report.test
 
 import pl.poznan.put.cie.putflap.report.Report
 
-data class AlphabetReport (
+data class AlphabetReport(
     val inAlphabet: Array<String>,
     val outAlphabet: Array<String>? = null
 ) : Report() {

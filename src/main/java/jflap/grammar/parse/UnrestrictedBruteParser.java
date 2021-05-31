@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,29 +15,24 @@
  */
 
 
-
-
-
 package jflap.grammar.parse;
 
 import jflap.grammar.Grammar;
 
 /**
  * This is the brute parser for an unrestricted jflap.grammar.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class UnrestrictedBruteParser extends BruteParser {
-	/**
-	 * Creates a new unrestricted brute parser.
-	 * 
-	 * @param grammar
-	 *            the unrestricted jflap.grammar to parse
-	 * @param target
-	 *            the target string
-	 */
-	public UnrestrictedBruteParser(Grammar grammar, String target) {
-		super(grammar, target);
-	}
+    /**
+     * Creates a new unrestricted brute parser.
+     *
+     * @param grammar the unrestricted jflap.grammar to parse
+     * @param target  the target string
+     */
+    public UnrestrictedBruteParser(Grammar grammar, String target) {
+        super(grammar, target);
+    }
 }

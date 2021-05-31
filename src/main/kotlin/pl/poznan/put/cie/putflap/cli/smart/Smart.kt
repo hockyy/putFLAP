@@ -6,12 +6,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
 import pl.poznan.put.cie.putflap.cli.Commands
 import pl.poznan.put.cie.putflap.cli.Types
-import pl.poznan.put.cie.putflap.cli.smart.parameters.ConvertParameters
-import pl.poznan.put.cie.putflap.cli.smart.parameters.RandomParameters
-import pl.poznan.put.cie.putflap.cli.smart.parameters.RunParameters
-import pl.poznan.put.cie.putflap.cli.smart.parameters.SmartParameters
-import pl.poznan.put.cie.putflap.cli.smart.parameters.TestParameters
-import pl.poznan.put.cie.putflap.cli.smart.parameters.WordParameters
+import pl.poznan.put.cie.putflap.cli.smart.parameters.*
 import java.io.File
 
 /**
@@ -19,7 +14,7 @@ import java.io.File
  *
  * @param configName name of file with [configuration][SmartConfig] to run
  */
-class Smart (
+class Smart(
     configName: String
 ) {
 
@@ -27,6 +22,7 @@ class Smart (
      * JSON mapper
      */
     private val mapper = ObjectMapper()
+
     /**
      * [Configuration][SmartConfig] to run
      */
@@ -56,12 +52,12 @@ class Smart (
                 )
             }
             Types.InstructionType.RUN -> {
-                val parameters =  getParameters<RunParameters>()
+                val parameters = getParameters<RunParameters>()
                 for (i in parameters.input.indices)
                     Commands.run(
                         parameters.input[i],
                         parameters.words,
-                        i+1
+                        i + 1
                     )
             }
             Types.InstructionType.TEST -> {

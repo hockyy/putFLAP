@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -19,8 +19,8 @@ package jflap.automata.turing;
 
 //MERLIN MERLIN MERLIN MERLIN MERLIN//
 //DELETE THIS if it is never used. Currently it is never used.
-public enum AcceptanceEnum{
+public enum AcceptanceEnum {
     ACCEPT,
     REJECT,
     CONTINUE
-};
+}

@@ -10,7 +10,7 @@ import jflap.automata.pda.PushdownAutomaton
 import pl.poznan.put.cie.putflap.exception.IncompatibleAutomatonException
 import pl.poznan.put.cie.putflap.report.Report
 
-data class StepReport (
+data class StepReport(
     val state: Int,
     val read: String,
     val toProcess: String,
@@ -65,23 +65,23 @@ data class StepReport (
         }
     }
 
-    constructor (configuration: FSAConfiguration): this(
+    constructor (configuration: FSAConfiguration) : this(
         configuration.currentState.id,
         getRead(configuration),
         configuration.unprocessedInput
     )
 
-    constructor (configuration: MealyConfiguration): this(
-            configuration.currentState.id,
-            getRead(configuration),
-            configuration.unprocessedInput,
-            configuration.output
-        )
+    constructor (configuration: MealyConfiguration) : this(
+        configuration.currentState.id,
+        getRead(configuration),
+        configuration.unprocessedInput,
+        configuration.output
+    )
 
-    constructor (configuration: PDAConfiguration): this(
-            configuration.currentState.id,
-            getRead(configuration),
-            configuration.unprocessedInput,
-            stack = configuration.stack.toString()
-        )
+    constructor (configuration: PDAConfiguration) : this(
+        configuration.currentState.id,
+        getRead(configuration),
+        configuration.unprocessedInput,
+        stack = configuration.stack.toString()
+    )
 }

@@ -29,9 +29,9 @@ class NondeterminismReportSpecification extends Specification {
         nondeterminismReport.lambdaTransitions == lambdaTransitionsReport
 
         where:
-        deterministic | nonDeterministicStates      || nonDeterministicStatesReport
-        true          | []                          || null
-        false         | [Mock(State), Mock(State)]  || [0, 0]
-        false         | [Mock(State)]               || [0]
+        deterministic | nonDeterministicStates     || nonDeterministicStatesReport
+        true          | []                         || null
+        false         | [Mock(State), Mock(State)] || [0, 0]
+        false         | [Mock(State)]              || [0]
     }
 }

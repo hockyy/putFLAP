@@ -10,7 +10,7 @@ import spock.lang.Unroll
 
 class AutomatonTypeSpecification extends Specification {
     @Unroll
-    def "should get automaton type" () {
+    def "should get automaton type"() {
         when:
         def type = AutomatonType.@Companion.get(automaton)
 

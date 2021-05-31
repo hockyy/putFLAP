@@ -9,7 +9,7 @@ import java.awt.*
 
 class StateTypeSpecification extends Specification {
     @Unroll
-    def "should return type of state" () {
+    def "should return type of state"() {
         given:
         def automaton = Mock(Automaton)
         def state = new State(1, new Point(), automaton)

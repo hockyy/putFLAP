@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.automata.event;
 
 import java.util.EventListener;
@@ -25,17 +22,16 @@ import java.util.EventListener;
 /**
  * An interface that those interested in changes in states in jflap.automata should
  * listen to.
- * 
+ *
  * @see jflap.automata.event.AutomataStateEvent
  * @see jflap.automata.Automaton#addStateListener
  */
 
 public interface AutomataStateListener extends EventListener {
-	/**
-	 * Registers with the listener that an event has occurred.
-	 * 
-	 * @param event
-	 *            the event
-	 */
-	public void automataStateChange(AutomataStateEvent event);
+    /**
+     * Registers with the listener that an event has occurred.
+     *
+     * @param event the event
+     */
+    void automataStateChange(AutomataStateEvent event);
 }

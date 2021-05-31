@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,21 +15,16 @@
  */
 
 
-
-
-
 package jflap.file.xml;
 
 /**
  * This is an abstract implementation of a transducer for
  * {@link jflap.pumping.PumpingLemma} objects.
- * 
+ *
  * @author Jinghui Lim
  * @see jflap.gui.pumping.PumpingLemmaChooser
- *
  */
-public abstract class PumpingLemmaTransducer extends AbstractTransducer 
-{
+public abstract class PumpingLemmaTransducer extends AbstractTransducer {
     /**
      * The tag for the name of the jflap.pumping lemma.
      */

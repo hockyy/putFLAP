@@ -129,7 +129,8 @@ object WordGenerator {
                 is MealyMachine /* also Moore */ -> automaton.getTransitionsToState(startState).isEmpty()
                 is PushdownAutomaton -> !automaton.finalStates.contains(startState)
                 else -> TODO("implement word generator for all automatons")
-            })
+            }
+        )
 
         return startState
     }

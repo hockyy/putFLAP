@@ -44,8 +44,8 @@ import jflap.gui.environment.Universe;
  */
 
 public class NDTMSimulator extends AutomatonSimulator {
-    private AcceptanceFilter[] myFilters;
-    private String inputStrings[];
+    private final AcceptanceFilter[] myFilters;
+    private String[] inputStrings;
 
     /**
      * Creates a TM simulator for the given automaton.
@@ -57,11 +57,11 @@ public class NDTMSimulator extends AutomatonSimulator {
 
     public NDTMSimulator(Automaton automaton) {
         super(automaton);
-		if (!(automaton instanceof TuringMachine)) {
-			throw new IllegalArgumentException(
-				"Automaton is not a Turing machine, but a "
-					+ automaton.getClass());
-		}
+        if (!(automaton instanceof TuringMachine)) {
+            throw new IllegalArgumentException(
+                "Automaton is not a Turing machine, but a "
+                    + automaton.getClass());
+        }
 
 //       //MERLIN MERLIN MERLIN MERLIN MERLIN// //this code is only for show, it should be moved into a setting with a better UI before release//
 //        AcceptanceFilter[] choices = new  AcceptanceFilter[] {new AcceptByHaltingFilter(), new AcceptByFinalStateFilter()};
@@ -80,12 +80,12 @@ public class NDTMSimulator extends AutomatonSimulator {
 
         List<AcceptanceFilter> tlist = new ArrayList<AcceptanceFilter>();
 
-		if (Universe.curProfile.getAcceptByFinalState()) {
-			tlist.add(new AcceptByFinalStateFilter());
-		}
-		if (Universe.curProfile.getAcceptByHalting()) {
-			tlist.add(new AcceptByHaltingFilter());
-		}
+        if (Universe.curProfile.getAcceptByFinalState()) {
+            tlist.add(new AcceptByFinalStateFilter());
+        }
+        if (Universe.curProfile.getAcceptByHalting()) {
+            tlist.add(new AcceptByHaltingFilter());
+        }
 
 
         myFilters = tlist.toArray(new AcceptanceFilter[0]);
@@ -104,9 +104,9 @@ public class NDTMSimulator extends AutomatonSimulator {
     public Configuration[] getInitialConfigurations(String input) {
         int tapes = ((TuringMachine) myAutomaton).tapes();
         String[] inputs = new String[tapes];
-		for (int i = 0; i < tapes; i++) {
-			inputs[i] = input;
-		}
+        for (int i = 0; i < tapes; i++) {
+            inputs[i] = input;
+        }
         return getInitialConfigurations(inputs);
     }
 
@@ -119,11 +119,11 @@ public class NDTMSimulator extends AutomatonSimulator {
      */
 
     public Configuration[] getInitialConfigurations(String[] inputs) {
-        inputStrings = (String[]) inputs.clone();
+        inputStrings = inputs.clone();
         Tape[] tapes = new Tape[inputs.length];
-		for (int i = 0; i < tapes.length; i++) {
-			tapes[i] = new Tape(inputs[i]);
-		}
+        for (int i = 0; i < tapes.length; i++) {
+            tapes[i] = new Tape(inputs[i]);
+        }
         Configuration[] configs = new Configuration[1];
         TMState initialState = (TMState) myAutomaton.getInitialState();
         TuringMachine tm = initialState.getInnerTM();
@@ -153,13 +153,13 @@ public class NDTMSimulator extends AutomatonSimulator {
             for (int i = 0; okay && i < tapes.length; i++) {
                 String charAtHead = tapes[i].read();
                 String toRead = t.getRead(i);
-				if (!charAtHead.equals(toRead)) {
-					okay = false;
-				}
+                if (!charAtHead.equals(toRead)) {
+                    okay = false;
+                }
             }
-			if (!okay) {
-				continue; // One of the toReads wasn't satisfied.
-			}
+            if (!okay) {
+                continue; // One of the toReads wasn't satisfied.
+            }
             State toState = t.getToState();
             Tape[] tapes2 = new Tape[tapes.length];
             for (int i = 0; i < tapes.length; i++) {
@@ -214,9 +214,9 @@ public class NDTMSimulator extends AutomatonSimulator {
             myConfigurations.add(initialConfiguration);
         }
         while (!myConfigurations.isEmpty()) {
-			if (isAccepted()) {
-				return true;
-			}
+            if (isAccepted()) {
+                return true;
+            }
             ArrayList<Configuration> configurationsToAdd = new ArrayList<>();
             Iterator<Configuration> it = myConfigurations.iterator();
             while (it.hasNext()) {
@@ -232,10 +232,9 @@ public class NDTMSimulator extends AutomatonSimulator {
 
     public List<TMConfiguration> stepBlock(TMConfiguration config) {
         //EDebug.print("Inside StepBlock");
-		while (((TuringMachine) (config = (TMConfiguration) stepConfiguration(config).get(0))
-			.getCurrentState().getAutomaton()).getParent() != null) {
-			;
-		}
+        while (((TuringMachine) (config = (TMConfiguration) stepConfiguration(config).get(0))
+            .getCurrentState().getAutomaton()).getParent() != null) {
+        }
         return Arrays.asList(config);
     }
 

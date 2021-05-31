@@ -34,9 +34,9 @@ import jflap.gui.environment.Universe;
  */
 
 public class TMSimulator extends AutomatonSimulator {
-    private String inputStrings[];
-    private Map<String, String> varToChar = new HashMap<String, String>();
-    private AcceptanceFilter[] myFilters;
+    private String[] inputStrings;
+    private final Map<String, String> varToChar = new HashMap<String, String>();
+    private final AcceptanceFilter[] myFilters;
 
 
     /**
@@ -109,7 +109,7 @@ public class TMSimulator extends AutomatonSimulator {
      */
     public Configuration[] getInitialConfigurations(String[] inputs) {
 //        System.out.println("Get Initial Configuration of multitape");
-        inputStrings = (String[]) inputs.clone();
+        inputStrings = inputs.clone();
         Tape[] tapes = new Tape[inputs.length];
         for (int i = 0; i < tapes.length; i++) {
             tapes[i] = new Tape(inputs[i]);
@@ -186,7 +186,7 @@ public class TMSimulator extends AutomatonSimulator {
                 if (characters[i].charAt(0) == underHead) {
                     flag = true;
                 }
-                ; //take care of assignment somewhere else //here, it's only alphabet letters
+                //take care of assignment somewhere else //here, it's only alphabet letters
             }
             if (flag) {
                 return flag;
@@ -211,7 +211,6 @@ public class TMSimulator extends AutomatonSimulator {
         EDebug.print("Inside StepBlock");
         while (((TuringMachine) (config = (TMConfiguration) stepConfiguration(config).get(0))
             .getCurrentState().getAutomaton()).getParent() != null) {
-            ;
         }
         return Arrays.asList(config);
     }

@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.gui.sim;
 
 import jflap.automata.turing.Tape;
@@ -25,24 +22,29 @@ import jflap.automata.turing.Tape;
 /**
  * This interface holds constants necessary for the drawing of configuration
  * icons for Turing machines.
- * 
+ *
  * @author Thomas Finley
  */
 
 interface TuringConstants {
-	/** A simple prefix/postfix string for tape. */
-	public static final String FIX = FixCreator.getFix();
+    /**
+     * A simple prefix/postfix string for tape.
+     */
+    String FIX = FixCreator.getFix();
 
-	/** The size of the tape head. */
-	public static final int SIZE_HEAD = 4;
+    /**
+     * The size of the tape head.
+     */
+    int SIZE_HEAD = 4;
 
-	static class FixCreator {
-		public static String getFix() {
-			char c = Tape.BLANK;
-			StringBuffer b = new StringBuffer();
-			for (int i = 0; i < 20; i++)
-				b.append(c);
-			return b.toString();
-		}
-	}
+    class FixCreator {
+        public static String getFix() {
+            char c = Tape.BLANK;
+            StringBuffer b = new StringBuffer();
+            for (int i = 0; i < 20; i++) {
+                b.append(c);
+            }
+            return b.toString();
+        }
+    }
 }

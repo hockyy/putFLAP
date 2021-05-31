@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.gui.lsystem;
 
 import java.util.EventObject;
@@ -25,35 +22,33 @@ import java.util.EventObject;
 /**
  * This event is given to listeners of an L-system read pane who are interested
  * when the read system registers a change.
- * 
+ *
+ * @author Thomas Finley
  * @see jflap.gui.lsystem.LSystemInputPane
  * @see jflap.gui.lsystem.LSystemInputListener
- * 
- * @author Thomas Finley
  */
 
 public class LSystemInputEvent extends EventObject {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new <CODE>LSystemInputEvent</CODE>.
-	 * 
-	 * @param input
-	 *            the <CODE>LSystemInputPane</CODE> that was edited
-	 */
-	public LSystemInputEvent(LSystemInputPane input) {
-		super(input);
-	}
+    /**
+     * Instantiates a new <CODE>LSystemInputEvent</CODE>.
+     *
+     * @param input the <CODE>LSystemInputPane</CODE> that was edited
+     */
+    public LSystemInputEvent(LSystemInputPane input) {
+        super(input);
+    }
 
-	/**
-	 * Returns the <CODE>LSystemInputPane</CODE> that generated this event.
-	 * 
-	 * @return the <CODE>LSystemInputPane</CODE> that generated this event
-	 */
-	public LSystemInputPane getInputPane() {
-		return (LSystemInputPane) getSource();
-	}
+    /**
+     * Returns the <CODE>LSystemInputPane</CODE> that generated this event.
+     *
+     * @return the <CODE>LSystemInputPane</CODE> that generated this event
+     */
+    public LSystemInputPane getInputPane() {
+        return (LSystemInputPane) getSource();
+    }
 }

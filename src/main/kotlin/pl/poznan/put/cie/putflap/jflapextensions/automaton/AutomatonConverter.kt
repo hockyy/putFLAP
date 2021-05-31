@@ -2,11 +2,7 @@ package pl.poznan.put.cie.putflap.jflapextensions.automaton
 
 import jflap.automata.Automaton
 import jflap.automata.Transition
-import jflap.automata.fsa.FSAToRegularExpressionConverter
-import jflap.automata.fsa.FSAToRegularGrammarConverter
-import jflap.automata.fsa.FiniteStateAutomaton
-import jflap.automata.fsa.Minimizer
-import jflap.automata.fsa.NFAToDFA
+import jflap.automata.fsa.*
 import jflap.automata.pda.PDAToCFGConverter
 import jflap.automata.pda.PushdownAutomaton
 import jflap.grammar.Grammar
@@ -46,8 +42,13 @@ object AutomatonConverter {
 
     private fun toDeterministicFSA(automaton: FiniteStateAutomaton): Pair<ConversionReport, FiniteStateAutomaton> {
         val result = NFAToDFA().convertToDFA(automaton)
-        return Pair(ConversionReport(
-            AutomatonType.get(automaton).toString(), AutomatonType.get(result).toString(), true, AutomatonReport(result)),
+        return Pair(
+            ConversionReport(
+                AutomatonType.get(automaton).toString(),
+                AutomatonType.get(result).toString(),
+                true,
+                AutomatonReport(result)
+            ),
             result
         )
     }
@@ -69,13 +70,18 @@ object AutomatonConverter {
         )
     }
 
-    private fun toMinimalFSA(automaton: FiniteStateAutomaton):  Pair<ConversionReport, FiniteStateAutomaton> {
+    private fun toMinimalFSA(automaton: FiniteStateAutomaton): Pair<ConversionReport, FiniteStateAutomaton> {
         val minimizer = Minimizer()
         minimizer.initializeMinimizer()
         minimizer.addTrapState(automaton)
         val result = minimizer.getMinimumDfa(automaton, minimizer.getDistinguishableGroupsTree(automaton))
-        return Pair(ConversionReport(
-            AutomatonType.get(automaton).toString(), AutomatonType.get(result).toString(), true, AutomatonReport(result)),
+        return Pair(
+            ConversionReport(
+                AutomatonType.get(automaton).toString(),
+                AutomatonType.get(result).toString(),
+                true,
+                AutomatonReport(result)
+            ),
             result
         )
     }
@@ -98,7 +104,7 @@ object AutomatonConverter {
     }
 
     private fun toGrammar(automaton: Automaton): Pair<ConversionReport, Grammar> {
-        val grammar =  when (automaton) {
+        val grammar = when (automaton) {
             is FiniteStateAutomaton -> FSAToRegularGrammarConverter().convertToRegularGrammar(automaton)
             is PushdownAutomaton -> {
                 val converter = PDAToCFGConverter()
@@ -129,8 +135,10 @@ object AutomatonConverter {
             else -> throw IncompatibleAutomatonException("Only FSA and PDA to grammar conversion is currently supported")
         }
 
-        return Pair(ConversionReport(
-            AutomatonType.get(automaton).toString(), "grammar", true, GrammarReport(grammar)),
+        return Pair(
+            ConversionReport(
+                AutomatonType.get(automaton).toString(), "grammar", true, GrammarReport(grammar)
+            ),
             grammar
         )
     }
@@ -158,8 +166,10 @@ object AutomatonConverter {
 
         FSAToRegularExpressionConverter.convertToSimpleAutomaton(automaton)
         val regexp = FSAToRegularExpressionConverter.convertToRegularExpression(automaton)
-        return Pair(ConversionReport(
-            AutomatonType.get(automaton).toString(), "REGEX", true, RegExpReport(regexp)),
+        return Pair(
+            ConversionReport(
+                AutomatonType.get(automaton).toString(), "REGEX", true, RegExpReport(regexp)
+            ),
             regexp
         )
     }
@@ -193,12 +203,13 @@ object AutomatonConverter {
             automaton.finalStates = prototype.finalStates
             automaton.initialState = automaton.states.find { it.id == 0 }
             automaton
-        }
-        else
+        } else
             throw IncompatibleAutomatonException("Only regular, right linear grammar can be converted to FSA")
 
-        return Pair(ConversionReport(
-            AutomatonType.get(automaton).toString(), "grammar", true, AutomatonReport(automaton)),
+        return Pair(
+            ConversionReport(
+                AutomatonType.get(automaton).toString(), "grammar", true, AutomatonReport(automaton)
+            ),
             automaton
         )
     }
@@ -221,8 +232,10 @@ object AutomatonConverter {
     }
 
     private fun toJSON(automaton: Automaton): Pair<ConversionReport, Automaton> {
-        return Pair(ConversionReport(
-            AutomatonType.get(automaton).toString(), "JSON", true, AutomatonReport.generate(automaton)),
+        return Pair(
+            ConversionReport(
+                AutomatonType.get(automaton).toString(), "JSON", true, AutomatonReport.generate(automaton)
+            ),
             automaton
         )
     }
@@ -245,8 +258,10 @@ object AutomatonConverter {
     }
 
     private fun toJSON(grammar: Grammar): Pair<ConversionReport, Grammar> {
-        return Pair(ConversionReport(
-            "grammar", "JSON", true, GrammarReport(grammar)),
+        return Pair(
+            ConversionReport(
+                "grammar", "JSON", true, GrammarReport(grammar)
+            ),
             grammar
         )
     }

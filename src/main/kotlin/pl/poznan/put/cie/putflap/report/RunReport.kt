@@ -13,25 +13,25 @@ data class RunReport internal constructor(
     val unprocessed: String? = null,
     val error: ErrorReport?
 ) : Report() {
-    constructor(type: AutomatonType, input: String, accepted: Boolean, steps: Array<StepReport>): this(
-            type,
-            input,
-            true,
-            accepted,
-            steps,
-            steps.last().currentOutput,
-            steps.last().toProcess,
-            null
-        )
+    constructor(type: AutomatonType, input: String, accepted: Boolean, steps: Array<StepReport>) : this(
+        type,
+        input,
+        true,
+        accepted,
+        steps,
+        steps.last().currentOutput,
+        steps.last().toProcess,
+        null
+    )
 
-    constructor(type: AutomatonType, input: String, error: ErrorReport, steps: Array<StepReport>? = null): this(
-            type,
-            input,
-            false,
-            false,
-            steps,
-            error = error
-        )
+    constructor(type: AutomatonType, input: String, error: ErrorReport, steps: Array<StepReport>? = null) : this(
+        type,
+        input,
+        false,
+        false,
+        steps,
+        error = error
+    )
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

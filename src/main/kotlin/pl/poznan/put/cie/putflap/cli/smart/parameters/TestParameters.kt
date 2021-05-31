@@ -3,7 +3,7 @@ package pl.poznan.put.cie.putflap.cli.smart.parameters
 import pl.poznan.put.cie.putflap.cli.Types
 import pl.poznan.put.cie.putflap.report.structure.automaton.AutomatonReport
 
-data class TestParameters (
+data class TestParameters(
     val type: Types.TestType,
     val inputs: Array<AutomatonReport>
 ) : SmartParameters() {

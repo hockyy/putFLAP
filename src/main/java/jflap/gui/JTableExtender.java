@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,37 +15,33 @@
  */
 
 
-
-
 package jflap.gui;
-
-import jflap.gui.action.BatchMultipleSimulateAction;
-import jflap.gui.action.MultipleSimulateAction;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
+import jflap.gui.action.BatchMultipleSimulateAction;
+import jflap.gui.action.MultipleSimulateAction;
 
-public class JTableExtender extends JTable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class JTableExtender extends JTable {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private final MultipleSimulateAction myMultSimAct;
 
-	public JTableExtender(TableModel model, MultipleSimulateAction mult){
-		super(model);
-		myMultSimAct = mult;
-	}
-	
-	public JTableExtender(TableModel model, BatchMultipleSimulateAction mult){
-		super(model);
-		myMultSimAct = mult;
-	}
-	
-	
-	public void changeSelection (int row, int column, boolean toggle, boolean extend) {
-		 super.changeSelection (row, column, toggle, extend);
-		 myMultSimAct.viewAutomaton(this);
-		 }
-	
-	private MultipleSimulateAction myMultSimAct;
+    public JTableExtender(TableModel model, MultipleSimulateAction mult) {
+        super(model);
+        myMultSimAct = mult;
+    }
+
+
+    public JTableExtender(TableModel model, BatchMultipleSimulateAction mult) {
+        super(model);
+        myMultSimAct = mult;
+    }
+
+    public void changeSelection(int row, int column, boolean toggle, boolean extend) {
+        super.changeSelection(row, column, toggle, extend);
+        myMultSimAct.viewAutomaton(this);
+    }
 }

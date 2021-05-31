@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.gui.environment.tag;
 
 /**
@@ -27,11 +24,10 @@ package jflap.gui.environment.tag;
  * must be deactivated. The intention is that an <CODE>Environment</CODE> will
  * detect the presence of critical tagged objects, and will not allow other
  * <CODE>EditorTag</CODE> objects to be selectable.
- * 
+ *
+ * @author Thomas Finley
  * @see jflap.gui.environment.Environment
  * @see jflap.gui.environment.tag.EditorTag
- * 
- * @author Thomas Finley
  */
 
 public interface CriticalTag extends Tag {

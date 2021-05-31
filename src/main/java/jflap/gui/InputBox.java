@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,68 +15,64 @@
  */
 
 
-
-
 package jflap.gui;
 
+import java.awt.*;
+import javax.swing.*;
 import jflap.automata.Automaton;
 import jflap.automata.AutomatonSimulator;
 import jflap.automata.Configuration;
 import jflap.gui.action.SimulateAction;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * Input GUI BOX
  * Not a great looking GUI, but it gets the job done. NOTE: It is no longer used in JFLAP
- * @author Kyung Min (Jason) Lee
  *
+ * @author Kyung Min (Jason) Lee
  */
-public class InputBox extends JFrame{
+public class InputBox extends JFrame {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    private final Component myComponent;
+    private String myInputString;
+    private final String myTitle;
 
-	private String myInputString;
-	
-	private final Component myComponent;
-	
-	private String myTitle;
-	
-	private AutomatonSimulator mySimulator;
-	
-	private SimulateAction myAction;
-	
-	private boolean myIsTuringMachine;
-	
-	private Automaton myAutomaton;
-	
-	public InputBox(SimulateAction simulateAction, Component component, String string) {
-		myAction=simulateAction;
-		myComponent=component;
-		myTitle=string;
-		
-		JPanel panel = new JPanel(new GridLayout(3, 2));
-		JTextField[] fields = new JTextField[1];
-		for (int i = 0; i < 1; i++) {
-			panel.add(new JLabel(myTitle + " "));
-			panel.add(fields[i] = new JTextField());
-		}
-		JButton jb=new JButton("Open Input File");
-		panel.add(jb);
-		int result = JOptionPane.showOptionDialog(component, panel, myTitle,
-				JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
-				null, null, null);
-		if (result != JOptionPane.YES_OPTION && result != JOptionPane.OK_OPTION)
-			return;
-		String[] input = new String[1];
-		for (int i = 0; i < 1; i++)
-			input[i] = fields[i].getText();
-		
-		System.out.println(input[0]);
+    private AutomatonSimulator mySimulator;
+
+    private final SimulateAction myAction;
+
+    private boolean myIsTuringMachine;
+
+    private Automaton myAutomaton;
+
+    public InputBox(SimulateAction simulateAction, Component component, String string) {
+        myAction = simulateAction;
+        myComponent = component;
+        myTitle = string;
+
+        JPanel panel = new JPanel(new GridLayout(3, 2));
+        JTextField[] fields = new JTextField[1];
+        for (int i = 0; i < 1; i++) {
+            panel.add(new JLabel(myTitle + " "));
+            panel.add(fields[i] = new JTextField());
+        }
+        JButton jb = new JButton("Open Input File");
+        panel.add(jb);
+        int result = JOptionPane.showOptionDialog(component, panel, myTitle,
+            JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE,
+            null, null, null);
+        if (result != JOptionPane.YES_OPTION && result != JOptionPane.OK_OPTION) {
+            return;
+        }
+        String[] input = new String[1];
+        for (int i = 0; i < 1; i++) {
+            input[i] = fields[i].getText();
+        }
+
+        System.out.println(input[0]);
 /*		
 		JButton j=new JButton("Click to Open Input File");
 		j.setSize(150,50);
@@ -147,37 +143,33 @@ public class InputBox extends JFrame{
 		this.add(bottom, BorderLayout.CENTER);
 		
 		*/
-	}
+    }
 
-	public String getInputString()
-	{
+    public static void main(String[] args) {
+        InputBox ib = new InputBox(null, null, "read");
 
-		return myInputString;
-	}
-	
-	public void exit()
-	{
-		System.out.println(myInputString);
-		if (myIsTuringMachine) {
-		//	configs = ((TMSimulator) simulator).getInitialConfigurations(s);
-		} else {
-			Configuration[] configs = mySimulator.getInitialConfigurations(myInputString);
-			myAction.handleInteraction(myAutomaton, mySimulator, configs, myInputString);
-		}
-		this.dispose();
-	}
-	
+    }
 
-	public void addSimulator(Automaton atm, AutomatonSimulator simulator, boolean isTuring) {
-		// TODO Auto-generated method stub
-		myAutomaton=atm;
-		mySimulator=simulator;
-		myIsTuringMachine=isTuring;
-	}
-	
-	public static void main(String[] args)
-	{
-		InputBox ib=new InputBox(null, null, "read");
-		
-	}
+    public String getInputString() {
+
+        return myInputString;
+    }
+
+    public void exit() {
+        System.out.println(myInputString);
+        if (myIsTuringMachine) {
+            //	configs = ((TMSimulator) simulator).getInitialConfigurations(s);
+        } else {
+            Configuration[] configs = mySimulator.getInitialConfigurations(myInputString);
+            myAction.handleInteraction(myAutomaton, mySimulator, configs, myInputString);
+        }
+        this.dispose();
+    }
+
+    public void addSimulator(Automaton atm, AutomatonSimulator simulator, boolean isTuring) {
+        // TODO Auto-generated method stub
+        myAutomaton = atm;
+        mySimulator = simulator;
+        myIsTuringMachine = isTuring;
+    }
 }

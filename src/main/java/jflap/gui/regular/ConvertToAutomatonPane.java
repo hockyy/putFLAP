@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,11 +15,13 @@
  */
 
 
-
-
-
 package jflap.gui.regular;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.*;
 import jflap.automata.State;
 import jflap.automata.fsa.FSATransition;
 import jflap.automata.fsa.FiniteStateAutomaton;
@@ -33,147 +35,138 @@ import jflap.gui.viewer.AutomatonPane;
 import jflap.gui.viewer.SelectionDrawer;
 import jflap.regular.Discretizer;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * This is the pane that holds the tools necessary for the conversion of a
  * regular expression to a finite state automaton.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class ConvertToAutomatonPane extends JPanel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The environment that holds the regular expression. The regular expression
+     * from the environment is itself not modified.
+     */
+    RegularEnvironment environment;
+    /**
+     * The frame that holds the environment.
+     */
+    JFrame frame;
+    /**
+     * The labels holding the current directions.
+     */
+    JLabel mainLabel = new JLabel();
+    JLabel detailLabel = new JLabel();
+    /**
+     * The automaton being built, which will be modified throughout this
+     * process.
+     */
+    private final FiniteStateAutomaton automaton = new FiniteStateAutomaton();
+    /**
+     * The controller object.
+     */
+    private final REToFSAController controller;
+    AbstractAction exportAction = new AbstractAction("Export") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-	/**
-	 * Creates a new conversion pane for the conversion of a regular expression
-	 * to an automaton.
-	 * 
-	 * @param environment
-	 *            the environment that this convert pane will be a part of
-	 */
-	public ConvertToAutomatonPane(RegularEnvironment environment) {
-		this.environment = environment;
-		JFrame frame = Universe.frameForEnvironment(environment);
+        public void actionPerformed(ActionEvent e) {
+            controller.export();
+        }
+    };
+    AbstractAction doAllAction = new AbstractAction("Do All") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		setLayout(new BorderLayout());
+        public void actionPerformed(ActionEvent e) {
+            controller.completeAll();
+        }
+    };
+    /**
+     * The actions.
+     */
+    AbstractAction doStepAction = new AbstractAction("Do Step") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		JPanel labels = new JPanel(new BorderLayout());
-		labels.add(mainLabel, BorderLayout.NORTH);
-		labels.add(detailLabel, BorderLayout.SOUTH);
-		mainLabel.setText(" ");
-		detailLabel.setText(" ");
+        public void actionPerformed(ActionEvent e) {
+            controller.completeStep();
+        }
+    };
+    AbstractAction exportAction2 = new AbstractAction("Export Now") {
+        /**
+         *
+         */
+        private static final long serialVersionUID = 1L;
 
-		add(labels, BorderLayout.NORTH);
-		SelectionDrawer automatonDrawer = new SelectionDrawer(automaton);
+        public void actionPerformed(ActionEvent e) {
+            controller.exportToTab();
+        }
+    };
 
-		// Do the initialization of the automaton.
-		State initialState = automaton.createState(new Point(60, 40));
-		State finalState = automaton.createState(new Point(450, 250));
-		automaton.setInitialState(initialState);
-		automaton.addFinalState(finalState);
-		FSATransition initialTransition = new FSATransition(initialState,
-				finalState, Discretizer.delambda(environment.getExpression()
-						.asString().replace('!', Universe.curProfile.getEmptyString().charAt(0))));
-		automaton.addTransition(initialTransition);
+    /**
+     * Creates a new conversion pane for the conversion of a regular expression
+     * to an automaton.
+     *
+     * @param environment the environment that this convert pane will be a part of
+     */
+    public ConvertToAutomatonPane(RegularEnvironment environment) {
+        this.environment = environment;
+        JFrame frame = Universe.frameForEnvironment(environment);
 
-		controller = new REToFSAController(this, automaton);
+        setLayout(new BorderLayout());
 
-		jflap.gui.editor.EditorPane ep = new jflap.gui.editor.EditorPane(automatonDrawer,
-				new ToolBox() {
-					public List<Tool> tools(AutomatonPane view, AutomatonDrawer drawer) {
-						LinkedList<Tool> tools = new LinkedList<>();
-						tools.add(new ArrowNontransitionTool(view, drawer));
-						tools.add(new RegularToAutomatonTransitionTool(view,
-								drawer, controller));
-						tools.add(new DeexpressionifyTransitionTool(view,
-								drawer, controller));
-						return tools;
-					}
-				});
+        JPanel labels = new JPanel(new BorderLayout());
+        labels.add(mainLabel, BorderLayout.NORTH);
+        labels.add(detailLabel, BorderLayout.SOUTH);
+        mainLabel.setText(" ");
+        detailLabel.setText(" ");
 
-		JToolBar bar = ep.getToolBar();
-		bar.addSeparator();
-		bar.add(doStepAction);
-		bar.add(doAllAction);
-		bar.add(exportAction);
-		// bar.add(exportAction2);
+        add(labels, BorderLayout.NORTH);
+        SelectionDrawer automatonDrawer = new SelectionDrawer(automaton);
 
-		add(ep, BorderLayout.CENTER);
-	}
+        // Do the initialization of the automaton.
+        State initialState = automaton.createState(new Point(60, 40));
+        State finalState = automaton.createState(new Point(450, 250));
+        automaton.setInitialState(initialState);
+        automaton.addFinalState(finalState);
+        FSATransition initialTransition = new FSATransition(initialState,
+            finalState, Discretizer.delambda(environment.getExpression()
+            .asString().replace('!', Universe.curProfile.getEmptyString().charAt(0))));
+        automaton.addTransition(initialTransition);
 
-	/**
-	 * The environment that holds the regular expression. The regular expression
-	 * from the environment is itself not modified.
-	 */
-	RegularEnvironment environment;
+        controller = new REToFSAController(this, automaton);
 
-	/**
-	 * The automaton being built, which will be modified throughout this
-	 * process.
-	 */
-	private FiniteStateAutomaton automaton = new FiniteStateAutomaton();
+        jflap.gui.editor.EditorPane ep = new jflap.gui.editor.EditorPane(automatonDrawer,
+            new ToolBox() {
+                public List<Tool> tools(AutomatonPane view, AutomatonDrawer drawer) {
+                    LinkedList<Tool> tools = new LinkedList<>();
+                    tools.add(new ArrowNontransitionTool(view, drawer));
+                    tools.add(new RegularToAutomatonTransitionTool(view,
+                        drawer, controller));
+                    tools.add(new DeexpressionifyTransitionTool(view,
+                        drawer, controller));
+                    return tools;
+                }
+            });
 
-	/** The controller object. */
-	private REToFSAController controller;
+        JToolBar bar = ep.getToolBar();
+        bar.addSeparator();
+        bar.add(doStepAction);
+        bar.add(doAllAction);
+        bar.add(exportAction);
+        // bar.add(exportAction2);
 
-	/** The frame that holds the environment. */
-	JFrame frame;
-
-	/** The labels holding the current directions. */
-	JLabel mainLabel = new JLabel();
-
-	JLabel detailLabel = new JLabel();
-
-	/** The actions. */
-	AbstractAction doStepAction = new AbstractAction("Do Step") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			controller.completeStep();
-		}
-	};
-
-	AbstractAction doAllAction = new AbstractAction("Do All") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			controller.completeAll();
-		}
-	};
-
-	AbstractAction exportAction = new AbstractAction("Export") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			controller.export();
-		}
-	};
-
-	AbstractAction exportAction2 = new AbstractAction("Export Now") {
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
-		public void actionPerformed(ActionEvent e) {
-			controller.exportToTab();
-		}
-	};
+        add(ep, BorderLayout.CENTER);
+    }
 }

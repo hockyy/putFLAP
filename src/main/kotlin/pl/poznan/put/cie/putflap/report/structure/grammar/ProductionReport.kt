@@ -6,7 +6,7 @@ import pl.poznan.put.cie.putflap.report.Report
 data class ProductionReport internal constructor(
     val left: String,
     val right: String
-): Report() {
+) : Report() {
 
     constructor (production: Production) : this(
         production.lhs,

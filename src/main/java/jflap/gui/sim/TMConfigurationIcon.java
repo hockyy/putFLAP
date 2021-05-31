@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,79 +15,75 @@
  */
 
 
-
-
-
 package jflap.gui.sim;
 
+import java.awt.*;
 import jflap.automata.Configuration;
 import jflap.automata.turing.TMConfiguration;
 import jflap.automata.turing.Tape;
 
-import java.awt.*;
-
 /**
  * This is a configuration icon for configurations related to finite state
- *  These sorts of configurations are defined only by the state that
+ * These sorts of configurations are defined only by the state that
  * the automata is current in, plus the read left.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class TMConfigurationIcon extends ConfigurationIcon implements
-		TuringConstants {
-	/**
-	 * Instantiates a new <CODE>TMConfigurationIcon</CODE>.
-	 * 
-	 * @param configuration
-	 *            the TM configuration that is represented
-	 */
-	public TMConfigurationIcon(Configuration configuration) {
-		super(configuration);
-		config = (TMConfiguration) configuration;
-	}
+    TuringConstants {
+    /**
+     * The turing machine configuration.
+     */
+    private final TMConfiguration config;
 
-	/**
-	 * Returns the height of this icon.
-	 * 
-	 * @return the height of this icon
-	 */
-	public int getIconHeight() {
-		// Why not...
-		return super.getIconHeight() + 25 * config.getTapes().length;
-	}
+    /**
+     * Instantiates a new <CODE>TMConfigurationIcon</CODE>.
+     *
+     * @param configuration the TM configuration that is represented
+     */
+    public TMConfigurationIcon(Configuration configuration) {
+        super(configuration);
+        config = (TMConfiguration) configuration;
+    }
 
-	/**
-	 * This will paint a sort of "torn tape" object that shows the current
-	 * contents and position of the tape.
-	 * 
-	 * @param c
-	 *            the component this icon is drawn on
-	 * @param g
-	 *            the <CODE>Graphics2D</CODE> object to draw on
-	 */
-	public void paintConfiguration(Component c, Graphics2D g, int width,
-			int height) {
-		if (c != null)
-			super.paintConfiguration(c, g, width, height);
-		float position = BELOW_STATE.y + 5.0f;
-		int headx = BELOW_STATE.x + width / 2;
-		int heady = BELOW_STATE.y + 5;
+    /**
+     * Returns the height of this icon.
+     *
+     * @return the height of this icon
+     */
+    public int getIconHeight() {
+        // Why not...
+        return super.getIconHeight() + 25 * config.getTapes().length;
+    }
 
-		Tape[] tapes = config.getTapes();
+    /**
+     * This will paint a sort of "torn tape" object that shows the current
+     * contents and position of the tape.
+     *
+     * @param c the component this icon is drawn on
+     * @param g the <CODE>Graphics2D</CODE> object to draw on
+     */
+    public void paintConfiguration(Component c, Graphics2D g, int width,
+                                   int height) {
+        if (c != null) {
+            super.paintConfiguration(c, g, width, height);
+        }
+        float position = BELOW_STATE.y + 5.0f;
+        int headx = BELOW_STATE.x + width / 2;
+        int heady = BELOW_STATE.y + 5;
 
-		for (int i = 0; i < tapes.length; i++) {
-			float tornHeight = Torn.paintString(g, FIX + tapes[i].getContents()
-					+ FIX, BELOW_STATE.x, position, Torn.TOP, width, true,
-					true, tapes[i].getTapeHead() + FIX.length());
-			g.setColor(Color.black);
-			g.drawLine(headx, heady, headx - SIZE_HEAD, heady - SIZE_HEAD);
-			g.drawLine(headx, heady, headx + SIZE_HEAD, heady - SIZE_HEAD);
-			position += tornHeight + 8f;
-		}
-		position -= 8f;
-	}
+        Tape[] tapes = config.getTapes();
 
-	/** The turing machine configuration. */
-	private TMConfiguration config;
+        for (int i = 0; i < tapes.length; i++) {
+            float tornHeight = Torn.paintString(g, FIX + tapes[i].getContents()
+                    + FIX, BELOW_STATE.x, position, Torn.TOP, width, true,
+                true, tapes[i].getTapeHead() + FIX.length());
+            g.setColor(Color.black);
+            g.drawLine(headx, heady, headx - SIZE_HEAD, heady - SIZE_HEAD);
+            g.drawLine(headx, heady, headx + SIZE_HEAD, heady - SIZE_HEAD);
+            position += tornHeight + 8f;
+        }
+        position -= 8f;
+    }
 }

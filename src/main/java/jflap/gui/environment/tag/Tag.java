@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.gui.environment.tag;
 
 /**
@@ -29,10 +26,9 @@ package jflap.gui.environment.tag;
  * to certain values that absolutely everybody and his mother had to be made
  * aware of. A tag object may simply be something that implements <CODE>Tag</CODE>
  * only to indicate that it has no tag.
- * 
- * @see jflap.gui.environment.Environment#add
- * 
+ *
  * @author Thomas Finley
+ * @see jflap.gui.environment.Environment#add
  */
 
 public interface Tag {

@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -13,9 +13,6 @@
  *  JFLAP is open source software. Please see the LICENSE for terms.
  *
  */
-
-
-
 
 
 package jflap.grammar.cfg;
@@ -39,80 +36,79 @@ import jflap.grammar.Production;
  * in the jflap.grammar. You must of course add each Transition returned by this call
  * to your pushdown automaton. When you have done this for each production in
  * your jflap.grammar, the equivalent PDA will be complete.
- * 
+ *
  * @author Ryan Cavalcante
  */
 
 public class CFGToPDALLConverter extends GrammarToAutomatonConverter {
-	/**
-	 * Creates an instance of <CODE>CFGToPDALLConverter</CODE>.
-	 */
-	public CFGToPDALLConverter() {
+    /**
+     * the intermediate state in the automaton.
+     */
+    protected State INTERMEDIATE_STATE;
 
-	}
+    /**
+     * Creates an instance of <CODE>CFGToPDALLConverter</CODE>.
+     */
+    public CFGToPDALLConverter() {
 
-	/**
-	 * Returns the transition created by converting <CODE>production</CODE> to
-	 * its equivalent transition.
-	 * 
-	 * @param production
-	 *            the production
-	 * @return the equivalent transition.
-	 */
-	public Transition getTransitionForProduction(Production production) {
-		String lhs = production.getLHS();
-		String rhs = production.getRHS();
-		Transition transition = new PDATransition(INTERMEDIATE_STATE,
-				INTERMEDIATE_STATE, "", lhs, rhs);
-		return transition;
-	}
+    }
 
-	/**
-	 * Adds all states to <CODE>automaton</CODE> necessary for the conversion
-	 * of <CODE>jflap.grammar</CODE> to its equivalent automaton. This creates three
-	 * states--an initial state, an intermediate state, and a final state. It
-	 * also adds transitions connecting the three states, and transitions for
-	 * each terminal in <CODE>jflap.grammar</CODE>
-	 * 
-	 * @param grammar
-	 *            the jflap.grammar being converted.
-	 * @param automaton
-	 *            the automaton being created.
-	 */
-	public void createStatesForConversion(Grammar grammar, Automaton automaton) {
-		initialize();
-		StatePlacer sp = new StatePlacer();
+    /**
+     * Returns the transition created by converting <CODE>production</CODE> to
+     * its equivalent transition.
+     *
+     * @param production the production
+     * @return the equivalent transition.
+     */
+    public Transition getTransitionForProduction(Production production) {
+        String lhs = production.getLHS();
+        String rhs = production.getRHS();
+        Transition transition = new PDATransition(INTERMEDIATE_STATE,
+            INTERMEDIATE_STATE, "", lhs, rhs);
+        return transition;
+    }
 
-		State initialState = automaton.createState(sp
-				.getPointForState(automaton));
-		automaton.setInitialState(initialState);
+    /**
+     * Adds all states to <CODE>automaton</CODE> necessary for the conversion
+     * of <CODE>jflap.grammar</CODE> to its equivalent automaton. This creates three
+     * states--an initial state, an intermediate state, and a final state. It
+     * also adds transitions connecting the three states, and transitions for
+     * each terminal in <CODE>jflap.grammar</CODE>
+     *
+     * @param grammar   the jflap.grammar being converted.
+     * @param automaton the automaton being created.
+     */
+    public void createStatesForConversion(Grammar grammar, Automaton automaton) {
+        initialize();
+        StatePlacer sp = new StatePlacer();
 
-		State intermediateState = automaton.createState(sp
-				.getPointForState(automaton));
-		INTERMEDIATE_STATE = intermediateState;
+        State initialState = automaton.createState(sp
+            .getPointForState(automaton));
+        automaton.setInitialState(initialState);
 
-		State finalState = automaton
-				.createState(sp.getPointForState(automaton));
-		automaton.addFinalState(finalState);
+        State intermediateState = automaton.createState(sp
+            .getPointForState(automaton));
+        INTERMEDIATE_STATE = intermediateState;
 
-		String startVariable = grammar.getStartVariable();
-		String temp = startVariable.concat(BOTTOM_OF_STACK);
-		PDATransition trans1 = new PDATransition(initialState,
-				intermediateState, "", BOTTOM_OF_STACK, temp);
-		automaton.addTransition(trans1);
-		PDATransition trans2 = new PDATransition(intermediateState, finalState,
-				"", BOTTOM_OF_STACK, "");
-		automaton.addTransition(trans2);
+        State finalState = automaton
+            .createState(sp.getPointForState(automaton));
+        automaton.addFinalState(finalState);
 
-		String[] terminals = grammar.getTerminals();
-		for (int k = 0; k < terminals.length; k++) {
-			PDATransition trans = new PDATransition(intermediateState,
-					intermediateState, terminals[k], terminals[k], "");
-			automaton.addTransition(trans);
-		}
+        String startVariable = grammar.getStartVariable();
+        String temp = startVariable.concat(BOTTOM_OF_STACK);
+        PDATransition trans1 = new PDATransition(initialState,
+            intermediateState, "", BOTTOM_OF_STACK, temp);
+        automaton.addTransition(trans1);
+        PDATransition trans2 = new PDATransition(intermediateState, finalState,
+            "", BOTTOM_OF_STACK, "");
+        automaton.addTransition(trans2);
 
-	}
+        String[] terminals = grammar.getTerminals();
+        for (int k = 0; k < terminals.length; k++) {
+            PDATransition trans = new PDATransition(intermediateState,
+                intermediateState, terminals[k], terminals[k], "");
+            automaton.addTransition(trans);
+        }
 
-	/** the intermediate state in the automaton. */
-	protected State INTERMEDIATE_STATE;
+    }
 }

@@ -15,12 +15,7 @@ import pl.poznan.put.cie.putflap.jflapextensions.automaton.AutomatonCreator
 import pl.poznan.put.cie.putflap.jflapextensions.automaton.AutomatonRunner
 import pl.poznan.put.cie.putflap.jflapextensions.automaton.AutomatonTester
 import pl.poznan.put.cie.putflap.jflapextensions.grammar.GrammarCreator
-import pl.poznan.put.cie.putflap.report.GenerationReport
-import pl.poznan.put.cie.putflap.report.MultipleConversionReport
-import pl.poznan.put.cie.putflap.report.MultipleGenerationReport
-import pl.poznan.put.cie.putflap.report.MultipleWordsReport
-import pl.poznan.put.cie.putflap.report.Report
-import pl.poznan.put.cie.putflap.report.WordsReport
+import pl.poznan.put.cie.putflap.report.*
 import pl.poznan.put.cie.putflap.report.structure.StructureReport
 import pl.poznan.put.cie.putflap.report.structure.automaton.AutomatonReport
 import pl.poznan.put.cie.putflap.report.structure.grammar.GrammarReport
@@ -46,12 +41,14 @@ object Commands {
         val result: Pair<Report, Serializable> = if (multiple > 1) {
             val results = mutableListOf<Pair<GenerationReport, Serializable>>()
             for (i in 0 until multiple) {
-                results.add(when (type) {
-                    Types.RandomType.FSA -> AutomatonGenerator(n, alphabet, finalStates = finals).fsa()
-                    Types.RandomType.MEALY -> AutomatonGenerator(n, alphabet, outputAlphabet = alphabet).mealy()
-                    Types.RandomType.MOORE -> AutomatonGenerator(n, alphabet, outputAlphabet = alphabet).moore()
-                    Types.RandomType.REGR -> GrammarGenerator(n, finals, alphabet).regular()
-                })
+                results.add(
+                    when (type) {
+                        Types.RandomType.FSA -> AutomatonGenerator(n, alphabet, finalStates = finals).fsa()
+                        Types.RandomType.MEALY -> AutomatonGenerator(n, alphabet, outputAlphabet = alphabet).mealy()
+                        Types.RandomType.MOORE -> AutomatonGenerator(n, alphabet, outputAlphabet = alphabet).moore()
+                        Types.RandomType.REGR -> GrammarGenerator(n, finals, alphabet).regular()
+                    }
+                )
             }
 
             Pair(
@@ -61,8 +58,7 @@ object Commands {
                     ) { results[it].first }),
                 Array(multiple) { results[it].second }
             )
-        }
-        else when (type) {
+        } else when (type) {
             Types.RandomType.FSA -> AutomatonGenerator(n, alphabet, finalStates = finals).fsa()
             Types.RandomType.MEALY -> AutomatonGenerator(n, alphabet, outputAlphabet = alphabet).mealy()
             Types.RandomType.MOORE -> AutomatonGenerator(n, alphabet, outputAlphabet = alphabet).moore()
@@ -172,8 +168,7 @@ object Commands {
                 if (fsa.size == automatons.size) {
                     if (automatons.size > 1) AutomatonTester.checkEquivalenceOfManyFSAs(fsa)
                     else throw IllegalArgumentException("More than one FSA expected")
-                }
-                else throw IncompatibleAutomatonException("Only FSAs can be tested for equivalence")
+                } else throw IncompatibleAutomatonException("Only FSAs can be tested for equivalence")
             }
             Types.TestType.AL -> AutomatonTester.retrieveAlphabets(automatons)
         }
@@ -205,8 +200,14 @@ object Commands {
      */
     fun convert(type: Types.ConvertType, json: Boolean, inputs: Array<StructureReport>) {
         when {
-            inputs.all { it is AutomatonReport } -> convert(type, json, Array(inputs.size) { inputs[it] as AutomatonReport })
-            inputs.all { it is GrammarReport } -> convert(type, json, Array(inputs.size) { inputs[it] as GrammarReport })
+            inputs.all { it is AutomatonReport } -> convert(
+                type,
+                json,
+                Array(inputs.size) { inputs[it] as AutomatonReport })
+            inputs.all { it is GrammarReport } -> convert(
+                type,
+                json,
+                Array(inputs.size) { inputs[it] as GrammarReport })
             else -> throw IllegalArgumentException("Convert can only be performed on automatons or grammars")
         }
     }
@@ -246,8 +247,14 @@ object Commands {
         val structures = Array(inputs.size) { XMLCodec().decode(File(inputs[it]), null) }
 
         when {
-            structures.all { it is Automaton } -> convert(type, json, Array(structures.size) { structures[it] as Automaton })
-            structures.all { it is Grammar } -> convert(type, json, Array(structures.size) { structures[it] as Grammar })
+            structures.all { it is Automaton } -> convert(
+                type,
+                json,
+                Array(structures.size) { structures[it] as Automaton })
+            structures.all { it is Grammar } -> convert(
+                type,
+                json,
+                Array(structures.size) { structures[it] as Grammar })
             else -> throw IllegalArgumentException("Tests can only be performed on automatons or grammars")
         }
 
@@ -284,9 +291,9 @@ object Commands {
      * @param automatons automatons to convert
      */
     private fun convert(type: Types.ConvertType, json: Boolean, automatons: Array<Automaton>) {
-        val conversion: Pair<MultipleConversionReport, Array<*>> = when  (type) {
+        val conversion: Pair<MultipleConversionReport, Array<*>> = when (type) {
             Types.ConvertType.GR -> AutomatonConverter.toGrammar(automatons)
-            Types.ConvertType.JSON ->  AutomatonConverter.toJSON(automatons)
+            Types.ConvertType.JSON -> AutomatonConverter.toJSON(automatons)
             else -> when {
                 automatons.all { it is FiniteStateAutomaton } -> {
                     val fsa = automatons.filterIsInstance<FiniteStateAutomaton>().toTypedArray()
@@ -369,13 +376,15 @@ object Commands {
      *
      * @param inputs [reports][AutomatonReport] to parse
      */
-    private fun automatonsFromReports(inputs: Array<AutomatonReport>) = Array(inputs.size) { AutomatonCreator.fromReport(inputs[it]) }
+    private fun automatonsFromReports(inputs: Array<AutomatonReport>) =
+        Array(inputs.size) { AutomatonCreator.fromReport(inputs[it]) }
 
     /**
      * Retrieves array of [Grammar] from array of [GrammarReport]
      *
      * @param inputs [reports][GrammarReport] to parse
      */
-    private fun grammarsFromReports(inputs: Array<GrammarReport>) = Array(inputs.size) { GrammarCreator.fromReport(inputs[it]) }
+    private fun grammarsFromReports(inputs: Array<GrammarReport>) =
+        Array(inputs.size) { GrammarCreator.fromReport(inputs[it]) }
 
 }

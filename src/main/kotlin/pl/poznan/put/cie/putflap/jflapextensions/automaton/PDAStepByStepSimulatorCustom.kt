@@ -6,13 +6,13 @@ import jflap.automata.pda.CharacterStack
 import jflap.automata.pda.PDAConfiguration
 import jflap.automata.pda.PDATransition
 import jflap.automata.pda.PushdownAutomaton
-import java.util.*
 import javax.swing.JOptionPane
 
 /**
  * Custom implementation of JFLAP PDAStepByStepSimulator. Gets rid of GUI elements and optimizes code for Kotlin
  */
-class PDAStepByStepSimulatorCustom (val automaton: PushdownAutomaton, val acceptance: Int) : AutomatonSimulator(automaton)  {
+class PDAStepByStepSimulatorCustom(val automaton: PushdownAutomaton, val acceptance: Int) :
+    AutomatonSimulator(automaton) {
 
     companion object {
         /** The variable to represent accept by empty stack.  */
@@ -51,6 +51,7 @@ class PDAStepByStepSimulatorCustom (val automaton: PushdownAutomaton, val accept
     override fun stepConfiguration(config: Configuration): ArrayList<Configuration> {
         val list = ArrayList<Configuration>()
         val configuration = config as PDAConfiguration
+
         /** get all information from configuration.  */
         val unprocessedInput = configuration.unprocessedInput
         val totalInput = configuration.input
@@ -59,10 +60,12 @@ class PDAStepByStepSimulatorCustom (val automaton: PushdownAutomaton, val accept
             .getTransitionsFromState(currentState)
         for (k in transitions.indices) {
             val transition = transitions[k] as PDATransition
+
             /** get all information from transition.  */
             val inputToRead = transition.inputToRead
             val stringToPop = transition.stringToPop
             val tempStack = configuration.stack
+
             /** copy stack object so as to not alter original.  */
             val stack = CharacterStack(tempStack)
             val stackContents = stack.pop(stringToPop.length)
@@ -141,9 +144,11 @@ class PDAStepByStepSimulatorCustom (val automaton: PushdownAutomaton, val accept
                     val result =
                         JOptionPane.showConfirmDialog(null, "JFLAP has generated 10000 configurations. Continue?")
                     when (result) {
-                        JOptionPane.CANCEL_OPTION -> {}
+                        JOptionPane.CANCEL_OPTION -> {
+                        }
                         JOptionPane.NO_OPTION -> return false
-                        else -> {}
+                        else -> {
+                        }
                     }
                 }
             }

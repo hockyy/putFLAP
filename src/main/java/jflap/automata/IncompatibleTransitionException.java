@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,27 +15,24 @@
  */
 
 
-
-
-
 package jflap.automata;
 
 /**
  * This class is an exception that is thrown in the event an incompatible <CODE>Transition</CODE>
  * object is assigned to an automaton.
- * 
+ *
+ * @author Thomas Finley
  * @see jflap.automata.Automaton
  * @see jflap.automata.Transition
  * @see jflap.automata.Automaton#getTransitionClass
  * @see jflap.automata.Automaton#addTransition
- * @author Thomas Finley
  */
 
 public class IncompatibleTransitionException extends RuntimeException {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
 }

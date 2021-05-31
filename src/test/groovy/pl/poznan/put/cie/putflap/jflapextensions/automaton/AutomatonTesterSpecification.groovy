@@ -8,7 +8,7 @@ class AutomatonTesterSpecification extends Specification {
     def automatonTester = AutomatonTester.INSTANCE
 
     @Unroll
-    def "should get nondeterministic states of automaton" () {
+    def "should get nondeterministic states of automaton"() {
         when:
         def states = automatonTester.getNondeterministicStates(automaton)
 
@@ -18,11 +18,11 @@ class AutomatonTesterSpecification extends Specification {
         where:
         automaton                             || result
         AutomatonReader.get("fsa.jff")        || []
-        AutomatonReader.get("fsa_nondet.jff") || [automaton.states[0], automaton.states[1], automaton.states[4] ]
+        AutomatonReader.get("fsa_nondet.jff") || [automaton.states[0], automaton.states[1], automaton.states[4]]
     }
 
     @Unroll
-    def "should get lambda transitions of automaton" () {
+    def "should get lambda transitions of automaton"() {
         when:
         def transitions = automatonTester.getLambdaTransitions(automaton)
 
@@ -34,13 +34,13 @@ class AutomatonTesterSpecification extends Specification {
         automaton                             || result
         AutomatonReader.get("fsa.jff")        || []
         AutomatonReader.get("fsa_nondet.jff") || [
-                                            automaton.transitions.find({i -> i.fromState.ID == 1 && i.toState.ID == 1}),
-                                            automaton.transitions.find({i -> i.fromState.ID == 0 && i.toState.ID == 1})
-                                        ]
+                automaton.transitions.find({ i -> i.fromState.ID == 1 && i.toState.ID == 1 }),
+                automaton.transitions.find({ i -> i.fromState.ID == 0 && i.toState.ID == 1 })
+        ]
     }
 
     @Unroll
-    def "should check equivalence of two FSA" () {
+    def "should check equivalence of two FSA"() {
         when:
         def equivalent = automatonTester.areEquivalent(fsa1, fsa2)
 

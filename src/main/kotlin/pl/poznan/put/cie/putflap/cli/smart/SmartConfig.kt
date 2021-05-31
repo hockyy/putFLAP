@@ -8,7 +8,7 @@ import pl.poznan.put.cie.putflap.cli.smart.parameters.SmartParameters
  *
  * @see Smart
  */
-data class SmartConfig (
+data class SmartConfig(
     val instruction: Types.InstructionType,
     val parameters: SmartParameters
 )

@@ -3,7 +3,7 @@ package pl.poznan.put.cie.putflap.cli.smart.parameters
 import pl.poznan.put.cie.putflap.cli.Types
 import pl.poznan.put.cie.putflap.report.structure.automaton.AutomatonReport
 
-data class ConvertParameters (
+data class ConvertParameters(
     val type: Types.ConvertType,
     val json: Boolean,
     val input: Array<AutomatonReport>

@@ -9,7 +9,11 @@ data class NondeterminismReport internal constructor(
     val lambdaTransitions: LambdaTransitionsReport?
 ) : Report() {
 
-    constructor(deterministic: Boolean, nonDeterministicStates: Array<State>, lambdaTransitionsReport: LambdaTransitionsReport) : this(
+    constructor(
+        deterministic: Boolean,
+        nonDeterministicStates: Array<State>,
+        lambdaTransitionsReport: LambdaTransitionsReport
+    ) : this(
         deterministic,
         if (nonDeterministicStates.isEmpty()) null else Array(nonDeterministicStates.size) { nonDeterministicStates[it].id },
         lambdaTransitionsReport

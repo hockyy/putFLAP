@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,9 +15,6 @@
  */
 
 
-
-
-
 package jflap.gui.environment.tag;
 
 /**
@@ -26,7 +23,7 @@ package jflap.gui.environment.tag;
  * that can change the inner workings of some sort of object, presumably for the
  * purpose, one would assume, of keeping it from doing so if such an edit would
  * be inconvenient or hazardous at some critical time.
- * 
+ *
  * @author Thomas Finley
  */
 

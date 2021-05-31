@@ -1,6 +1,6 @@
 package pl.poznan.put.cie.putflap.report
 
-data class MultipleConversionReport (
+data class MultipleConversionReport(
     val to: String,
     val allSucceed: Boolean,
     val conversions: Array<ConversionReport>

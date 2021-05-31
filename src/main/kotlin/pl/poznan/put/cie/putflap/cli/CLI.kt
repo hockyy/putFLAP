@@ -50,11 +50,10 @@ object CLI : CliktCommand(
                 for (i in (result.second as Array<*>).indices)
                     XMLCodec().encode(
                         (result.second as Array<*>)[i] as Serializable,
-                        File("${filename}_${i+1}.jff"),
+                        File("${filename}_${i + 1}.jff"),
                         null
                     )
-            }
-            else XMLCodec().encode(result.second, file, null)
+            } else XMLCodec().encode(result.second, file, null)
         }
     }
 

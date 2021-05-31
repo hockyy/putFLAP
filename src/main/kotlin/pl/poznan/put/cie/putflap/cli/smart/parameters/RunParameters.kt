@@ -2,7 +2,7 @@ package pl.poznan.put.cie.putflap.cli.smart.parameters
 
 import pl.poznan.put.cie.putflap.report.structure.automaton.AutomatonReport
 
-data class RunParameters (
+data class RunParameters(
     val input: Array<AutomatonReport>,
     val words: Array<String>
 ) : SmartParameters() {

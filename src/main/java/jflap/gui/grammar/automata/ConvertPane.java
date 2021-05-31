@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,11 +15,10 @@
  */
 
 
-
-
-
 package jflap.gui.grammar.automata;
 
+import java.awt.*;
+import javax.swing.*;
 import jflap.automata.Automaton;
 import jflap.gui.SplitPaneFactory;
 import jflap.gui.TableTextSizeSlider;
@@ -29,80 +28,80 @@ import jflap.gui.grammar.GrammarTable;
 import jflap.gui.viewer.AutomatonPane;
 import jflap.gui.viewer.SelectionDrawer;
 
-import javax.swing.*;
-import java.awt.*;
-
 /**
  * This <CODE>ConvertPane</CODE> exists for the user to convert an automaton
  * to a grammar.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class ConvertPane extends JPanel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The automaton pane.
+     */
+    private final AutomatonPane automatonPane;
+    /**
+     * The grammar table.
+     */
+    private final GrammarTable table = new GrammarTable(
+        new jflap.gui.grammar.GrammarTableModel() {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-	/**
-	 * Instantiates a new <CODE>ConvertPane</CODE>.
-	 */
-	public ConvertPane(AutomatonEnvironment environment, Automaton automaton) {
-		super(new BorderLayout());
-		drawer = new SelectionDrawer(automaton);
-		automatonPane = new AutomatonPane(drawer);
-		JSplitPane split = SplitPaneFactory.createSplit(environment, true, 0.6,
-				automatonPane, new JScrollPane(table));
-		automatonPane.addMouseListener(new ArrowDisplayOnlyTool(automatonPane,
-				automatonPane.getDrawer()));
-		add(split, BorderLayout.CENTER);
-		add(new TableTextSizeSlider(table, JSlider.HORIZONTAL), BorderLayout.SOUTH);
-	}
+            public boolean isCellEditable(int r, int c) {
+                return false;
+            }
+        });
+    /**
+     * The drawer for the automaton.
+     */
+    private final SelectionDrawer drawer;
 
-	/**
-	 * Returns the <CODE>AutomatonPane</CODE> that does the drawing.
-	 * 
-	 * @return the <CODE>AutomatonPane</CODE> that does the drawing
-	 */
-	public AutomatonPane getAutomatonPane() {
-		return automatonPane;
-	}
+    /**
+     * Instantiates a new <CODE>ConvertPane</CODE>.
+     */
+    public ConvertPane(AutomatonEnvironment environment, Automaton automaton) {
+        super(new BorderLayout());
+        drawer = new SelectionDrawer(automaton);
+        automatonPane = new AutomatonPane(drawer);
+        JSplitPane split = SplitPaneFactory.createSplit(environment, true, 0.6,
+            automatonPane, new JScrollPane(table));
+        automatonPane.addMouseListener(new ArrowDisplayOnlyTool(automatonPane,
+            automatonPane.getDrawer()));
+        add(split, BorderLayout.CENTER);
+        add(new TableTextSizeSlider(table, JSlider.HORIZONTAL), BorderLayout.SOUTH);
+    }
 
-	/**
-	 * Returns the <CODE>SelectionDrawer</CODE> for the automaton pane.
-	 * 
-	 * @return the <CODE>SelectionDrawer</CODE>
-	 */
-	public SelectionDrawer getDrawer() {
-		return drawer;
-	}
+    /**
+     * Returns the <CODE>AutomatonPane</CODE> that does the drawing.
+     *
+     * @return the <CODE>AutomatonPane</CODE> that does the drawing
+     */
+    public AutomatonPane getAutomatonPane() {
+        return automatonPane;
+    }
 
-	/**
-	 * Returns the <CODE>GrammarTable</CODE> where the grammar is being built.
-	 * 
-	 * @return the <CODE>GrammarTable</CODE>
-	 */
-	public GrammarTable getTable() {
-		return table;
-	}
+    /**
+     * Returns the <CODE>SelectionDrawer</CODE> for the automaton pane.
+     *
+     * @return the <CODE>SelectionDrawer</CODE>
+     */
+    public SelectionDrawer getDrawer() {
+        return drawer;
+    }
 
-	/** The automaton pane. */
-	private AutomatonPane automatonPane;
-
-	/** The grammar table. */
-	private GrammarTable table = new GrammarTable(
-			new jflap.gui.grammar.GrammarTableModel() {
-				/**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
-
-				public boolean isCellEditable(int r, int c) {
-					return false;
-				}
-			});
-
-	/** The drawer for the automaton. */
-	private SelectionDrawer drawer;
+    /**
+     * Returns the <CODE>GrammarTable</CODE> where the grammar is being built.
+     *
+     * @return the <CODE>GrammarTable</CODE>
+     */
+    public GrammarTable getTable() {
+        return table;
+    }
 }

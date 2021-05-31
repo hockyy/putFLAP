@@ -1,21 +1,12 @@
 package pl.poznan.put.cie.putflap.jflapextensions.automaton
 
-import jflap.automata.Automaton
-import jflap.automata.LambdaCheckerFactory
-import jflap.automata.NondeterminismDetectorFactory
-import jflap.automata.State
-import jflap.automata.Transition
+import jflap.automata.*
 import jflap.automata.fsa.FiniteStateAutomaton
 import jflap.automata.graph.FSAEqualityChecker
 import jflap.automata.mealy.MealyMachine
 import jflap.automata.mealy.MealyTransition
 import jflap.grammar.Grammar
-import pl.poznan.put.cie.putflap.report.test.AlphabetReport
-import pl.poznan.put.cie.putflap.report.test.EquivalenceReport
-import pl.poznan.put.cie.putflap.report.test.LambdaTransitionsReport
-import pl.poznan.put.cie.putflap.report.test.MultipleAlphabetReport
-import pl.poznan.put.cie.putflap.report.test.MultipleNondeterminismReport
-import pl.poznan.put.cie.putflap.report.test.NondeterminismReport
+import pl.poznan.put.cie.putflap.report.test.*
 
 /**
  * Implements JFLAP tests

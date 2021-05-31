@@ -158,10 +158,10 @@ class WordGeneratorSpecification extends Specification {
 
     private static def checkAllWords(Automaton automaton, String[] words) {
         def simulator
-        if (automaton instanceof  FiniteStateAutomaton) simulator = new FSAStepByStateSimulator(automaton)
-        else if (automaton instanceof  MooreMachine) simulator = new MooreStepByStateSimulator(automaton)
-        else if (automaton instanceof  MealyMachine) simulator = new MealyStepByStateSimulator(automaton)
-        else if (automaton instanceof  PushdownAutomaton) simulator = new PDAStepByStepSimulatorCustom(automaton, PDAStepByStepSimulatorCustom.FINAL_STATE_ACCEPTANCE)
+        if (automaton instanceof FiniteStateAutomaton) simulator = new FSAStepByStateSimulator(automaton)
+        else if (automaton instanceof MooreMachine) simulator = new MooreStepByStateSimulator(automaton)
+        else if (automaton instanceof MealyMachine) simulator = new MealyStepByStateSimulator(automaton)
+        else if (automaton instanceof PushdownAutomaton) simulator = new PDAStepByStepSimulatorCustom(automaton, PDAStepByStepSimulatorCustom.FINAL_STATE_ACCEPTANCE)
 
         words.each { word -> if (!simulator.simulateInput(word)) return false }
         return true

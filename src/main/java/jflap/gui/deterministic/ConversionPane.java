@@ -1,7 +1,7 @@
 /*
  *  JFLAP - Formal Languages and Automata Package
- * 
- * 
+ *
+ *
  *  Susan H. Rodger
  *  Computer Science Department
  *  Duke University
@@ -15,11 +15,15 @@
  */
 
 
-
-
-
 package jflap.gui.deterministic;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.util.LinkedList;
+import java.util.List;
+import javax.swing.*;
 import jflap.automata.fsa.FiniteStateAutomaton;
 import jflap.gui.SplitPaneFactory;
 import jflap.gui.TooltipAction;
@@ -33,114 +37,104 @@ import jflap.gui.viewer.AutomatonDrawer;
 import jflap.gui.viewer.AutomatonPane;
 import jflap.gui.viewer.SelectionDrawer;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.LinkedList;
-import java.util.List;
-
 /**
  * This is the pane where the user defines all that is needed for the conversion
  * of an NFA to a DFA.
- * 
+ *
  * @author Thomas Finley
  */
 
 public class ConversionPane extends JPanel {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+    /**
+     * The editor pane.
+     */
+    EditorPane editor;
+    /**
+     * The controller object.
+     */
+    private final ConversionController controller;
 
-	/**
-	 * Instantiates a new <CODE>ConversionPane</CODE>.
-	 * 
-	 * @param nfa
-	 *            the NFA we are converting to a DFA
-	 * @param environment
-	 *            the environment this pane will be added to
-	 */
-	public ConversionPane(FiniteStateAutomaton nfa, Environment environment) {
-		super(new BorderLayout());
-		FiniteStateAutomaton dfa = new FiniteStateAutomaton();
-		controller = new ConversionController(nfa, dfa, this);
-		// Create the left view of the original NFA.
-		AutomatonPane nfaPane = new AutomatonDraggerPane(nfa);
-		// Put it all together.
-		JSplitPane split = SplitPaneFactory.createSplit(environment, true, .25,
-				nfaPane, createEditor(dfa));
-		add(split, BorderLayout.CENTER);
+    /**
+     * Instantiates a new <CODE>ConversionPane</CODE>.
+     *
+     * @param nfa         the NFA we are converting to a DFA
+     * @param environment the environment this pane will be added to
+     */
+    public ConversionPane(FiniteStateAutomaton nfa, Environment environment) {
+        super(new BorderLayout());
+        FiniteStateAutomaton dfa = new FiniteStateAutomaton();
+        controller = new ConversionController(nfa, dfa, this);
+        // Create the left view of the original NFA.
+        AutomatonPane nfaPane = new AutomatonDraggerPane(nfa);
+        // Put it all together.
+        JSplitPane split = SplitPaneFactory.createSplit(environment, true, .25,
+            nfaPane, createEditor(dfa));
+        add(split, BorderLayout.CENTER);
 
-		// When the component is first shown, perform layout.
-		addComponentListener(new ComponentAdapter() {
-			public void componentShown(ComponentEvent event) {
-				// We may now lay out the states...
-				controller.performFirstLayout();
-				editor.getAutomatonPane().repaint();
-			}
+        // When the component is first shown, perform layout.
+        addComponentListener(new ComponentAdapter() {
+            final boolean doneBefore = false;
 
-			boolean doneBefore = false;
-		});
-	}
+            public void componentShown(ComponentEvent event) {
+                // We may now lay out the states...
+                controller.performFirstLayout();
+                editor.getAutomatonPane().repaint();
+            }
+        });
+    }
 
-	/**
-	 * Creates the editor pane for the DFA.
-	 * 
-	 * @param dfa
-	 *            the dfa to create the editor pane for
-	 */
-	private EditorPane createEditor(FiniteStateAutomaton dfa) {
-		SelectionDrawer drawer = new SelectionDrawer(dfa);
-		editor = new EditorPane(drawer, new ToolBox() {
-			public List<Tool> tools(AutomatonPane view,
-					AutomatonDrawer drawer) {
-				List<Tool> tools = new LinkedList<>();
-				tools.add(new ArrowNontransitionTool(view, drawer));
-				tools.add(new TransitionExpanderTool(view, drawer, controller));
-				tools.add(new StateExpanderTool(view, drawer, controller));
-				return tools;
-			}
-		});
-		addExtras(editor.getToolBar());
-		return editor;
-	}
+    /**
+     * Creates the editor pane for the DFA.
+     *
+     * @param dfa the dfa to create the editor pane for
+     */
+    private EditorPane createEditor(FiniteStateAutomaton dfa) {
+        SelectionDrawer drawer = new SelectionDrawer(dfa);
+        editor = new EditorPane(drawer, new ToolBox() {
+            public List<Tool> tools(AutomatonPane view,
+                                    AutomatonDrawer drawer) {
+                List<Tool> tools = new LinkedList<>();
+                tools.add(new ArrowNontransitionTool(view, drawer));
+                tools.add(new TransitionExpanderTool(view, drawer, controller));
+                tools.add(new StateExpanderTool(view, drawer, controller));
+                return tools;
+            }
+        });
+        addExtras(editor.getToolBar());
+        return editor;
+    }
 
-	/**
-	 * Adds the extra controls to the toolbar for the editorpane.
-	 * 
-	 * @param toolbar
-	 *            the tool bar to add crap to
-	 */
-	private void addExtras(JToolBar toolbar) {
-		toolbar.addSeparator();
-		toolbar.add(new TooltipAction("Complete",
-				"This will finish all expansion.") {
-			/**
-					 * 
-					 */
-					private static final long serialVersionUID = 1L;
+    /**
+     * Adds the extra controls to the toolbar for the editorpane.
+     *
+     * @param toolbar the tool bar to add crap to
+     */
+    private void addExtras(JToolBar toolbar) {
+        toolbar.addSeparator();
+        toolbar.add(new TooltipAction("Complete",
+            "This will finish all expansion.") {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-			public void actionPerformed(ActionEvent e) {
-				controller.complete();
-			}
-		});
-		toolbar.add(new TooltipAction("Done?", "Are we finished?") {
-			/**
-			 * 
-			 */
-			private static final long serialVersionUID = 1L;
+            public void actionPerformed(ActionEvent e) {
+                controller.complete();
+            }
+        });
+        toolbar.add(new TooltipAction("Done?", "Are we finished?") {
+            /**
+             *
+             */
+            private static final long serialVersionUID = 1L;
 
-			public void actionPerformed(ActionEvent e) {
-				controller.done();
-			}
-		});
-	}
-
-	/** The controller object. */
-	private ConversionController controller;
-
-	/** The editor pane. */
-	EditorPane editor;
+            public void actionPerformed(ActionEvent e) {
+                controller.done();
+            }
+        });
+    }
 }
